@@ -4,6 +4,7 @@ import { tryCatch } from '@/lib/utils'
 import { preloadQuery } from 'convex/nextjs'
 import { notFound } from 'next/navigation'
 import Items from './Items'
+import { Textarea } from '@/components/ui/textarea'
 
 export default async function Page({
   params,
@@ -25,6 +26,7 @@ export default async function Page({
   return (
     <main className="container mx-auto">
       <Items preloadedList={data} />
+      <Textarea placeholder="Type your message here." />
     </main>
   )
 }

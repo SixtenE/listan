@@ -2,7 +2,6 @@
 
 import { Card, CardHeader, CardTitle } from '@/components/ui/card'
 import { api } from '@/convex/_generated/api'
-import { SignOutButton } from '@clerk/nextjs'
 import { Preloaded, usePreloadedQuery } from 'convex/react'
 import Link from 'next/link'
 
@@ -15,9 +14,6 @@ export default function Page({
 
   return (
     <ul className="mx-auto w-full">
-      <li key="clerk">
-        <SignOutButton />
-      </li>
       {lists.map((list) => (
         <li key={list._id}>
           <Link href={`/lists/${list._id}`}>

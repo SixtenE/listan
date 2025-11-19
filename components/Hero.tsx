@@ -19,7 +19,7 @@ export function Hero() {
 
         <div className="mb-12 flex flex-col items-center justify-center gap-4 sm:flex-row">
           <Button asChild size="lg" className="w-full sm:w-auto">
-            <Link href="/lists">Start for free</Link>
+            <Link href="/sign-in">Start for free</Link>
           </Button>
         </div>
       </div>
