@@ -34,7 +34,12 @@ export default async function Page() {
       <div className="flex items-center justify-between">
         <h1 className="text-5xl">mina listor</h1>
 
-        <Button className="ml-auto" size="icon-lg">
+        <Button
+          className="ml-auto"
+          size="icon-lg"
+          aria-label="Add list"
+          title="Add list"
+        >
           <Plus />
         </Button>
       </div>
