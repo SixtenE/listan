@@ -22,9 +22,7 @@ export default async function Page() {
 
   return (
     <main className="container mx-auto flex flex-col gap-4 px-4 pt-8">
-      <ul className="grid grid-cols-1 sm:grid-cols-4">
-        <Lists preloadedLists={data} />
-      </ul>
+      <Lists preloadedLists={data} />
     </main>
   )
 }
