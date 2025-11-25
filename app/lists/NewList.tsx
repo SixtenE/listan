@@ -1,13 +1,15 @@
+'use client'
+
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
 import { Plus } from 'lucide-react'
 
 export default function Page() {
   return (
-    <Card className="bg-background border-border hover:bg-card flex h-full items-center justify-center border-2 border-dashed transition">
-      <Button variant="secondary" size="icon">
-        <Plus className="text-muted-foreground" />
+    <div className="flex w-full justify-center">
+      <Button className="rounded-full" size="lg">
+        <Plus />
+        new
       </Button>
-    </Card>
+    </div>
   )
 }

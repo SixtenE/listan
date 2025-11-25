@@ -4,6 +4,9 @@ import { auth } from '@clerk/nextjs/server'
 import { preloadQuery } from 'convex/nextjs'
 import { notFound, redirect } from 'next/navigation'
 import Lists from './Lists'
+import { Button } from '@/components/ui/button'
+import { Search } from 'lucide-react'
+import { UserButton } from '@clerk/nextjs'
 
 export default async function Page() {
   const { userId } = await auth()
@@ -21,7 +24,17 @@ export default async function Page() {
   }
 
   return (
-    <main className="container mx-auto flex flex-col gap-4 px-4 pt-8">
+    <main className="relative container mx-auto flex flex-col gap-4 px-4 pt-8">
+      <header>
+        <div className="flex justify-end gap-x-2">
+          <Button variant="secondary" size="icon-lg" className="rounded-2xl">
+            <UserButton />
+          </Button>
+          <Button variant="secondary" size="icon-lg" className="rounded-2xl">
+            <Search className="stroke-3" />
+          </Button>
+        </div>
+      </header>
       <Lists preloadedLists={data} />
     </main>
   )
