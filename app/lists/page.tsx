@@ -5,7 +5,7 @@ import { preloadQuery } from 'convex/nextjs'
 import { notFound, redirect } from 'next/navigation'
 import Lists from './Lists'
 import { Button } from '@/components/ui/button'
-import { Search } from 'lucide-react'
+import { Plus, Search } from 'lucide-react'
 import { UserButton } from '@clerk/nextjs'
 
 export default async function Page() {
@@ -30,8 +30,9 @@ export default async function Page() {
           <Button variant="secondary" size="icon-lg" className="rounded-2xl">
             <UserButton />
           </Button>
-          <Button variant="secondary" size="icon-lg" className="rounded-2xl">
-            <Search className="stroke-3" />
+          <Button variant="secondary" size="lg" className="rounded-2xl">
+            <Plus className="stroke-3" />
+            new list
           </Button>
         </div>
       </header>
