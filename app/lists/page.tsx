@@ -7,6 +7,7 @@ import Lists from './Lists'
 import { Button } from '@/components/ui/button'
 import { Plus, Search } from 'lucide-react'
 import { UserButton } from '@clerk/nextjs'
+import AddListDialog from '@/components/AddListDialog'
 
 export default async function Page() {
   const { userId } = await auth()
@@ -30,10 +31,8 @@ export default async function Page() {
           <Button variant="secondary" size="icon-lg" className="rounded-2xl">
             <UserButton />
           </Button>
-          <Button variant="secondary" size="lg" className="rounded-2xl">
-            <Plus className="stroke-3" />
-            new list
-          </Button>
+
+          <AddListDialog />
         </div>
       </header>
       <Lists preloadedLists={data} />

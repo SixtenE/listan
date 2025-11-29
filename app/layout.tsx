@@ -28,29 +28,29 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <ThemeProvider
-      attribute="class"
-      defaultTheme="system"
-      enableSystem
-      disableTransitionOnChange
-    >
-      <ClerkProvider
-        dynamic
-        appearance={{
-          theme: shadcn,
-        }}
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <html lang="en" suppressHydrationWarning>
-          <body
-            className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <ClerkProvider
+            dynamic
+            appearance={{
+              theme: shadcn,
+            }}
           >
             <ConvexClientProvider>
               {children}
               <Toaster />
             </ConvexClientProvider>
-          </body>
-        </html>
-      </ClerkProvider>
-    </ThemeProvider>
+          </ClerkProvider>
+        </ThemeProvider>
+      </body>
+    </html>
   )
 }

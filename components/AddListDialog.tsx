@@ -15,6 +15,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { api } from '@/convex/_generated/api'
 import { useMutation } from 'convex/react'
+import { Plus } from 'lucide-react'
 import { FormEvent } from 'react'
 
 export default function Page() {
@@ -32,7 +33,10 @@ export default function Page() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">Open Dialog</Button>
+        <Button variant="secondary" size="lg" className="rounded-2xl">
+          <Plus className="stroke-3" />
+          new list
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <form onSubmit={handleSubmit}>
