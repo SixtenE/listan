@@ -5,7 +5,6 @@ import { preloadQuery } from 'convex/nextjs'
 import { notFound, redirect } from 'next/navigation'
 import Lists from './Lists'
 import { Button } from '@/components/ui/button'
-import { Plus, Search } from 'lucide-react'
 import { UserButton } from '@clerk/nextjs'
 import AddListDialog from '@/components/AddListDialog'
 

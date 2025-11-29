@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { MoreHorizontalIcon, MoreVertical } from 'lucide-react'
+import { MoreVertical } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -18,12 +18,9 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Field, FieldGroup, FieldLabel } from '@/components/ui/field'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+import { Field, FieldGroup } from '@/components/ui/field'
 import { Textarea } from '@/components/ui/textarea'
 
 export default function DropdownMenuDialog() {

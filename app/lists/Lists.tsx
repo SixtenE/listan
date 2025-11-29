@@ -1,10 +1,8 @@
 'use client'
 
-import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { api } from '@/convex/_generated/api'
 import { Preloaded, usePreloadedQuery } from 'convex/react'
-import { MoreVertical } from 'lucide-react'
 import Link from 'next/link'
 import ListActions from './ListActions'
 
