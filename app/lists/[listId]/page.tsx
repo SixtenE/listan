@@ -5,6 +5,11 @@ import { preloadQuery } from 'convex/nextjs'
 import { notFound } from 'next/navigation'
 import Items from './Items'
 import { Textarea } from '@/components/ui/textarea'
+import AddListDialog from '@/components/AddListDialog'
+import { Button } from '@/components/ui/button'
+import { UserButton } from '@clerk/nextjs'
+import Link from 'next/link'
+import { ChevronLeft } from 'lucide-react'
 
 export default async function Page({
   params,
@@ -24,9 +29,28 @@ export default async function Page({
   }
 
   return (
-    <main className="container mx-auto">
+    <main className="relative container mx-auto flex flex-col gap-4 px-4 pt-8">
+      <header className="flex w-full items-center justify-between">
+        <Button
+          asChild
+          variant="secondary"
+          className="rounded-2xl"
+          size="icon-lg"
+        >
+          <Link href="/lists">
+            <ChevronLeft />
+          </Link>
+        </Button>
+
+        <div className="flex items-center justify-end gap-x-2">
+          <Button variant="secondary" size="icon-lg" className="rounded-2xl">
+            <UserButton />
+          </Button>
+
+          <AddListDialog />
+        </div>
+      </header>
       <Items preloadedList={data} />
-      <Textarea placeholder="Type your message here." />
     </main>
   )
 }
