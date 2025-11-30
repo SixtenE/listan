@@ -3,9 +3,7 @@
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
-  DialogClose,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -17,16 +15,19 @@ import { useMutation } from 'convex/react'
 import { Plus } from 'lucide-react'
 import { FormEvent } from 'react'
 
-export default function Page() {
+interface PageProps {
+  clerkId: string
+}
+
+export default function Page({ clerkId }: PageProps) {
   const add = useMutation(api.lists.add)
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
     const formData = new FormData(e.currentTarget)
     const name = formData.get('name') as string
-    await add({
-      name,
-    })
+
+    await add({ name, clerkId })
   }
 
   return (
@@ -37,24 +38,25 @@ export default function Page() {
           new list
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="border-none bg-transparent sm:max-w-[425px]">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle>Create a new list</DialogTitle>
-            <DialogDescription>
-              Enter the name for your new list below.
-            </DialogDescription>
+            <DialogTitle>Name your list</DialogTitle>
           </DialogHeader>
-          <div className="grid gap-4">
+          <div className="mt-4 grid gap-4">
             <div className="grid gap-3">
-              <Input id="name-1" name="name" defaultValue="" />
+              <Input
+                id="name-1"
+                name="name"
+                defaultValue=""
+                className="rounded-xl"
+              />
             </div>
           </div>
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
-            </DialogClose>
-            <Button type="submit">Save changes</Button>
+          <DialogFooter className="mt-4">
+            <Button type="submit" className="rounded-xl">
+              Add
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

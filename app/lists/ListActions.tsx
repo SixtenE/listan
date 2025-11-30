@@ -39,14 +39,17 @@ export default function DropdownMenuDialog() {
             <MoreVertical />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-40" align="end">
+        <DropdownMenuContent className="w-40 rounded-xl" align="end">
           <DropdownMenuGroup>
-            <DropdownMenuItem onSelect={() => setShowEditDialog(true)}>
+            <DropdownMenuItem
+              className="rounded-lg"
+              onSelect={() => setShowEditDialog(true)}
+            >
               Edit
             </DropdownMenuItem>
             <DropdownMenuItem
               onSelect={() => setShowDeleteDialog(true)}
-              className="text-destructive"
+              className="text-destructive rounded-lg"
             >
               Delete
             </DropdownMenuItem>

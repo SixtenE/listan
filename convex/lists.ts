@@ -22,21 +22,19 @@ export const get = query({
 export const add = mutation({
   args: {
     name: v.string(),
+    clerkId: v.string(),
   },
-  handler: async (ctx, { name }) => {
-    const identity = await ctx.auth.getUserIdentity()
-    if (identity === null) {
-      throw new Error('Not authenticated')
-    }
-    const listId = await ctx.db.insert('lists', {
-      name,
-    })
+  handler: async (ctx, { name, clerkId }) => {
+    
+    const listId = await ctx.db.insert('lists', { name })
+
     await ctx.db.insert('members', {
-      clerkId: identity.subject,
+      clerkId,
       listId,
     })
+
     return listId
-  },
+  }
 })
 
 export const getById = query({

@@ -46,7 +46,7 @@ export default async function Page({
             <UserButton />
           </Button>
 
-          <AddListDialog />
+          <AddListDialog clerkId="1" />
         </div>
       </header>
       <Items preloadedList={data} />
