@@ -8,7 +8,8 @@ export default defineSchema({
   members: defineTable({
     clerkId: v.string(),
     listId: v.id('lists'),
-  }).index('by_clerkId_listId', ['clerkId', 'listId']),
+    role: v.union(v.literal('owner'), v.literal('member')),
+  }).index('by_clerkId_listId', ['clerkId', 'listId']).index('by_listId_role', ['listId', 'role']).index('by_listId', ['listId']),
   items: defineTable({
     content: v.string(),
     listId: v.id('lists'),

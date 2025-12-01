@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { MoreVertical } from 'lucide-react'
+import { Edit, LogOut, MoreVertical, Trash } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -22,10 +22,23 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Field, FieldGroup } from '@/components/ui/field'
 import { Textarea } from '@/components/ui/textarea'
+import { useQuery } from 'convex/react'
+import { api } from '@/convex/_generated/api'
+import { Id } from '@/convex/_generated/dataModel'
 
-export default function DropdownMenuDialog() {
+interface PageProps {
+  listId: string
+  clerkId: string
+}
+
+export default function Page({ listId, clerkId }: PageProps) {
   const [showEditDialog, setShowEditDialog] = useState(false)
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
+
+  const isOwner = useQuery(api.lists.isOwner, {
+    listId: listId as Id<'lists'>,
+    clerkId,
+  })
 
   return (
     <>
@@ -40,20 +53,34 @@ export default function DropdownMenuDialog() {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-40 rounded-xl" align="end">
-          <DropdownMenuGroup>
-            <DropdownMenuItem
-              className="rounded-lg"
-              onSelect={() => setShowEditDialog(true)}
-            >
-              Edit
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onSelect={() => setShowDeleteDialog(true)}
-              className="text-destructive rounded-lg"
-            >
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
+          {isOwner ? (
+            <DropdownMenuGroup>
+              <DropdownMenuItem
+                className="rounded-lg"
+                onSelect={() => setShowEditDialog(true)}
+              >
+                Edit
+                <Edit className="ml-auto h-4 w-4" />
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onSelect={() => setShowDeleteDialog(true)}
+                className="text-destructive rounded-lg"
+              >
+                Delete
+                <Trash className="stroke-destructive ml-auto h-4 w-4" />
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+          ) : (
+            <DropdownMenuGroup>
+              <DropdownMenuItem
+                onSelect={() => setShowDeleteDialog(true)}
+                className="text-destructive rounded-lg"
+              >
+                Leave
+                <LogOut className="stroke-destructive ml-auto h-4 w-4" />
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
       <Dialog open={showEditDialog} onOpenChange={setShowEditDialog}>

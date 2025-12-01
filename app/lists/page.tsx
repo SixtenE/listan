@@ -34,7 +34,7 @@ export default async function Page() {
           <AddListDialog clerkId={userId} />
         </div>
       </header>
-      <Lists preloadedLists={data} />
+      <Lists preloadedLists={data} clerkId={userId} />
     </main>
   )
 }
