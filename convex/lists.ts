@@ -1,23 +1,27 @@
 import { v } from 'convex/values'
-import { mutation, query } from './_generated/server'
+import { internalMutation, mutation, query } from './_generated/server'
 import { api } from './_generated/api'
 
 export const get = query({
-    args: {
-        clerkId: v.string(),
-    },
-    handler: async (ctx, { clerkId }) => {
-        const memberships = await ctx.db
-            .query('members')
-            .withIndex('by_clerkId_listId', (q) => q.eq('clerkId', clerkId))
-            .collect()
+  args: {
+    clerkId: v.string(),
+  },
+  handler: async (ctx, { clerkId }) => {
+    const memberships = await ctx.db
+      .query('members')
+      .withIndex('by_clerkId_listId', (q) => q.eq('clerkId', clerkId))
+      .collect()
 
-        const lists = await Promise.all(
-            memberships.map(async (membership) => await ctx.db.get(membership.listId)),
-        )
+    const lists = await Promise.all(
+      memberships.map(
+        async (membership) => await ctx.db.get(membership.listId),
+      ),
+    )
 
-        return lists.filter((list) => list !== null)
-    },
+    return lists
+      .filter((list) => list !== null)
+      .sort((a, b) => b.updatedAt - a.updatedAt)
+  },
 })
 
 export const add = mutation({
@@ -26,25 +30,25 @@ export const add = mutation({
     clerkId: v.string(),
   },
   handler: async (ctx, { name, clerkId }) => {
-
     const createdListAmount = await ctx.db
       .query('members')
-      .withIndex('by_clerkId_listId', (q) => q.eq('clerkId', clerkId)).collect()
+      .withIndex('by_clerkId_listId', (q) => q.eq('clerkId', clerkId))
+      .collect()
 
-    if (createdListAmount.length >= 10) {
+    if (createdListAmount.length >= 3) {
       throw new Error('You have reached the limit of 10 created lists.')
     }
-    
-    const listId = await ctx.db.insert('lists', { name })
+
+    const listId = await ctx.db.insert('lists', { name, updatedAt: Date.now() })
 
     await ctx.db.insert('members', {
       clerkId,
       listId,
-        role: 'owner',
+      role: 'owner',
     })
 
     return listId
-  }
+  },
 })
 
 export const getById = query({
@@ -54,11 +58,11 @@ export const getById = query({
   handler: async (ctx, { listId }) => {
     const list = await ctx.db.get(listId)
     return {
-        ...list,
-        items: await ctx.db
-            .query('items')
-            .withIndex('by_listId', (q) => q.eq('listId', listId))
-            .collect(),
+      ...list,
+      items: await ctx.db
+        .query('items')
+        .withIndex('by_listId', (q) => q.eq('listId', listId))
+        .collect(),
     }
   },
 })
@@ -72,7 +76,7 @@ export const isOwner = query({
     const membership = await ctx.db
       .query('members')
       .withIndex('by_clerkId_listId', (q) =>
-        q.eq('clerkId', clerkId).eq('listId', listId)
+        q.eq('clerkId', clerkId).eq('listId', listId),
       )
       .first()
 
@@ -87,11 +91,13 @@ export const rename = mutation({
     clerkId: v.string(),
   },
   handler: async (ctx, { listId, newName, clerkId }) => {
+    const isListOwner = await ctx.runQuery(api.lists.isOwner, {
+      listId,
+      clerkId,
+    })
 
-    const isListOwner = await ctx.runQuery(api.lists.isOwner, { listId, clerkId })
-    
     if (!isListOwner) {
-        throw new Error('Only owners can rename the list')
+      throw new Error('Only owners can rename the list')
     }
 
     await ctx.db.patch(listId, { name: newName })
@@ -104,10 +110,10 @@ export const leave = mutation({
     clerkId: v.string(),
   },
   handler: async (ctx, { listId, clerkId }) => {
-const isOwner = await ctx.db
+    const isOwner = await ctx.db
       .query('members')
       .withIndex('by_listId_role', (q) =>
-        q.eq('listId', listId).eq('role', 'owner')
+        q.eq('listId', listId).eq('role', 'owner'),
       )
       .first()
 
@@ -118,7 +124,7 @@ const isOwner = await ctx.db
     const membership = await ctx.db
       .query('members')
       .withIndex('by_clerkId_listId', (q) =>
-        q.eq('clerkId', clerkId).eq('listId', listId)
+        q.eq('clerkId', clerkId).eq('listId', listId),
       )
       .first()
 
@@ -128,7 +134,7 @@ const isOwner = await ctx.db
 
     await ctx.db.delete(membership._id)
   },
-})  
+})
 
 export const remove = mutation({
   args: {
@@ -139,7 +145,7 @@ export const remove = mutation({
     const isOwner = await ctx.db
       .query('members')
       .withIndex('by_listId_role', (q) =>
-        q.eq('listId', listId).eq('role', 'owner')
+        q.eq('listId', listId).eq('role', 'owner'),
       )
       .first()
 
@@ -169,5 +175,64 @@ export const remove = mutation({
 
     // Delete the list
     await ctx.db.delete(listId)
+  },
+})
+
+export const joinList = mutation({
+  args: {
+    listId: v.id('lists'),
+    clerkId: v.string(),
+  },
+  handler: async (ctx, { listId, clerkId }) => {
+    const existingMembership = await ctx.db
+      .query('members')
+      .withIndex('by_clerkId_listId', (q) =>
+        q.eq('clerkId', clerkId).eq('listId', listId),
+      )
+      .first()
+
+    if (existingMembership) {
+      throw new Error('User is already a member of the list')
+    }
+
+    await ctx.db.insert('members', {
+      clerkId,
+      listId,
+      role: 'member',
+    })
+  },
+})
+
+export const leaveList = mutation({
+  args: {
+    listId: v.id('lists'),
+    clerkId: v.string(),
+  },
+  handler: async (ctx, { listId, clerkId }) => {
+    const membership = await ctx.db
+      .query('members')
+      .withIndex('by_clerkId_listId', (q) =>
+        q.eq('clerkId', clerkId).eq('listId', listId),
+      )
+      .first()
+
+    if (!membership) {
+      throw new Error('Membership not found')
+    }
+
+    if (membership.role === 'owner') {
+      throw new Error('Owners cannot leave the list')
+    }
+
+    await ctx.db.delete(membership._id)
+  },
+})
+
+export const updateUpdatedAt = internalMutation({
+  args: {
+    listId: v.id('lists'),
+  },
+  handler: async (ctx, { listId }) => {
+    await ctx.db.patch(listId, { updatedAt: Date.now() })
   },
 })

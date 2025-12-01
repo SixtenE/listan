@@ -18,12 +18,7 @@ export default function Page({
           <ItemActions />
           <Card className="group w-full border-none">
             <CardContent>
-              <p className="text-sm font-normal">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quam
-                dignissimos laboriosam quibusdam perspiciatis! Laudantium nihil
-                error pariatur veniam quisquam consequuntur ullam officia optio,
-                asperiores repellendus? Magni doloribus est in dolores.
-              </p>
+              <p className="text-sm font-normal">{item.content}</p>
             </CardContent>
           </Card>
         </li>

@@ -2,19 +2,27 @@ import { api } from '@/convex/_generated/api'
 import { Id } from '@/convex/_generated/dataModel'
 import { tryCatch } from '@/lib/utils'
 import { preloadQuery } from 'convex/nextjs'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import Items from './Items'
 import AddListDialog from '@/components/AddListDialog'
 import { Button } from '@/components/ui/button'
 import { UserButton } from '@clerk/nextjs'
 import Link from 'next/link'
 import { ChevronLeft } from 'lucide-react'
+import ItemInput from './ItemInput'
+import { auth } from '@clerk/nextjs/server'
 
 export default async function Page({
   params,
 }: {
   params: Promise<{ listId: string }>
 }) {
+  const { userId } = await auth()
+
+  if (!userId) {
+    redirect('/sign-in')
+  }
+
   const { listId } = await params
 
   const { data, error } = await tryCatch(
@@ -50,6 +58,7 @@ export default async function Page({
         </div>
       </header>
       <Items preloadedList={data} />
+      <ItemInput clerkId={userId} listId={listId} />
     </main>
   )
 }

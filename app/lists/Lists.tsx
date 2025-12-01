@@ -5,6 +5,7 @@ import { api } from '@/convex/_generated/api'
 import { Preloaded, usePreloadedQuery } from 'convex/react'
 import Link from 'next/link'
 import ListActions from './ListActions'
+import { formatDistanceToNow } from 'date-fns'
 
 interface PageProps {
   preloadedLists: Preloaded<typeof api.lists.get>
@@ -23,8 +24,10 @@ export default function Page({ preloadedLists, clerkId }: PageProps) {
             <Card className="group w-full border-none">
               <CardContent>
                 <p className="text-xl font-medium">{list.name}</p>
-                <p className="text-muted-foreground font-mono text-xs">
-                  Updated 3 days ago
+                <p className="text-muted-foreground text-xs">
+                  {formatDistanceToNow(new Date(list.updatedAt), {
+                    addSuffix: true,
+                  })}
                 </p>
               </CardContent>
             </Card>
