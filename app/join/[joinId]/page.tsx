@@ -1,3 +1,6 @@
+import { auth } from '@clerk/nextjs/server'
+import { redirect } from 'next/navigation'
+
 export default async function Page({
   params,
 }: {
@@ -5,5 +8,15 @@ export default async function Page({
 }) {
   const { joinId } = await params
 
-  return <h1>{joinId}</h1>
+  const { userId } = await auth()
+
+  if (!userId) {
+    redirect('/sign-in')
+  }
+
+  return (
+    <main>
+      <h1>You have been invited to join list {joinId}</h1>
+    </main>
+  )
 }

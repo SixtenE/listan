@@ -36,7 +36,7 @@ export const add = mutation({
       .collect()
 
     if (createdListAmount.length >= 3) {
-      throw new Error('You have reached the limit of 10 created lists.')
+      throw new Error('You have reached the limit of 3 created lists.')
     }
 
     const listId = await ctx.db.insert('lists', { name, updatedAt: Date.now() })
