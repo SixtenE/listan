@@ -81,6 +81,11 @@ export default function Page({ listId, clerkId }: PageProps) {
   async function handleDeleteSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
+    // Don't proceed if ownership status is still loading
+    if (isOwner === undefined) {
+      return
+    }
+
     try {
       if (isOwner) {
         await deleteList({
@@ -113,7 +118,13 @@ export default function Page({ listId, clerkId }: PageProps) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-40 rounded-xl" align="end">
-          {isOwner ? (
+          {isOwner === undefined ? (
+            <DropdownMenuGroup>
+              <DropdownMenuItem disabled className="rounded-lg">
+                Loading...
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+          ) : isOwner ? (
             <DropdownMenuGroup>
               <DropdownMenuItem
                 className="rounded-lg"
@@ -178,12 +189,18 @@ export default function Page({ listId, clerkId }: PageProps) {
           <form onSubmit={handleDeleteSubmit}>
             <DialogHeader>
               <DialogTitle>
-                {isOwner ? 'Delete list' : 'Leave list'}
+                {isOwner === undefined
+                  ? 'Loading...'
+                  : isOwner
+                    ? 'Delete list'
+                    : 'Leave list'}
               </DialogTitle>
               <DialogDescription>
-                {isOwner
-                  ? 'Are you sure you want to delete this list? This action cannot be undone.'
-                  : 'Are you sure you want to leave this list? You will no longer have access to it.'}
+                {isOwner === undefined
+                  ? 'Please wait...'
+                  : isOwner
+                    ? 'Are you sure you want to delete this list? This action cannot be undone.'
+                    : 'Are you sure you want to leave this list? You will no longer have access to it.'}
               </DialogDescription>
             </DialogHeader>
             <DialogFooter>
@@ -196,8 +213,13 @@ export default function Page({ listId, clerkId }: PageProps) {
                 type="submit"
                 variant="destructive"
                 className="rounded-xl"
+                disabled={isOwner === undefined}
               >
-                {isOwner ? 'Delete' : 'Leave'}
+                {isOwner === undefined
+                  ? 'Loading...'
+                  : isOwner
+                    ? 'Delete'
+                    : 'Leave'}
               </Button>
             </DialogFooter>
           </form>

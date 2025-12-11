@@ -34,7 +34,7 @@ export default async function Page({
   return (
     <main className="relative container mx-auto flex flex-col gap-4 px-4 pt-8">
       <Header clerkId={userId} showBackButton backHref="/lists" />
-      <Items preloadedList={data} />
+      <Items preloadedList={data} clerkId={userId} />
       <ItemInput clerkId={userId} listId={listId} />
     </main>
   )

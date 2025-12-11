@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { MoreVertical } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
@@ -22,10 +22,71 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Field, FieldGroup } from '@/components/ui/field'
 import { Textarea } from '@/components/ui/textarea'
+import { useMutation } from 'convex/react'
+import { api } from '@/convex/_generated/api'
+import { Id } from '@/convex/_generated/dataModel'
 
-export default function ItemActions() {
+interface ItemActionsProps {
+  itemId: Id<'items'>
+  listId: Id<'lists'>
+  clerkId: string
+  initialContent: string
+}
+
+export default function ItemActions({
+  itemId,
+  listId,
+  clerkId,
+  initialContent,
+}: ItemActionsProps) {
+  // listId is kept for future use (e.g., for permission checks)
+  void listId
+
   const [showEditDialog, setShowEditDialog] = useState(false)
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
+  const [itemContent, setItemContent] = useState(initialContent)
+
+  const editItem = useMutation(api.items.editItem)
+  const deleteItem = useMutation(api.items.remove)
+
+  useEffect(() => {
+    setItemContent(initialContent)
+  }, [initialContent])
+
+  useEffect(() => {
+    if (!showEditDialog) {
+      setItemContent(initialContent)
+    }
+  }, [showEditDialog, initialContent])
+
+  async function handleEditSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    const formData = new FormData(event.currentTarget)
+    const newContent = formData.get('content') as string
+
+    if (newContent.trim() && newContent !== initialContent) {
+      await editItem({
+        itemId,
+        content: newContent.trim(),
+        clerkId,
+      })
+    }
+    setShowEditDialog(false)
+  }
+
+  async function handleDeleteSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+
+    try {
+      await deleteItem({
+        itemId,
+        clerkId,
+      })
+      setShowDeleteDialog(false)
+    } catch (error) {
+      console.error('Failed to delete item:', error)
+    }
+  }
 
   return (
     <>
@@ -55,48 +116,59 @@ export default function ItemActions() {
       </DropdownMenu>
       <Dialog open={showEditDialog} onOpenChange={setShowEditDialog}>
         <DialogContent className="border-none bg-transparent sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Edit</DialogTitle>
-          </DialogHeader>
-          <FieldGroup className="pb-3">
-            <Field>
-              <Textarea
-                placeholder="Edit your item..."
-                className="resize-none rounded-xl"
-              />
-            </Field>
-          </FieldGroup>
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline" className="rounded-xl">
-                Cancel
+          <form onSubmit={handleEditSubmit}>
+            <DialogHeader>
+              <DialogTitle>Edit</DialogTitle>
+            </DialogHeader>
+            <FieldGroup className="pb-3">
+              <Field>
+                <Textarea
+                  name="content"
+                  value={itemContent}
+                  onChange={(e) => setItemContent(e.target.value)}
+                  placeholder="Edit your item..."
+                  className="resize-none rounded-xl"
+                />
+              </Field>
+            </FieldGroup>
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button type="button" variant="outline" className="rounded-xl">
+                  Cancel
+                </Button>
+              </DialogClose>
+              <Button type="submit" className="rounded-xl">
+                Save
               </Button>
-            </DialogClose>
-            <Button type="submit" className="rounded-xl">
-              Save
-            </Button>
-          </DialogFooter>
+            </DialogFooter>
+          </form>
         </DialogContent>
       </Dialog>
       <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <DialogContent className="border-none bg-transparent sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Delete item</DialogTitle>
-            <DialogDescription>
-              Are you sure you want to delete this item? This action cannot be
-              undone.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline" className="rounded-xl">
-                Cancel
+          <form onSubmit={handleDeleteSubmit}>
+            <DialogHeader>
+              <DialogTitle>Delete item</DialogTitle>
+              <DialogDescription>
+                Are you sure you want to delete this item? This action cannot be
+                undone.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button type="button" variant="outline" className="rounded-xl">
+                  Cancel
+                </Button>
+              </DialogClose>
+              <Button
+                type="submit"
+                variant="destructive"
+                className="rounded-xl"
+              >
+                Delete
               </Button>
-            </DialogClose>
-            <Button type="submit" variant="destructive" className="rounded-xl">
-              Delete
-            </Button>
-          </DialogFooter>
+            </DialogFooter>
+          </form>
         </DialogContent>
       </Dialog>
     </>

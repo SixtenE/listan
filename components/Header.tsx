@@ -30,7 +30,7 @@ export default function Header({
         </Button>
       )}
 
-      <div className="flex items-center justify-end gap-x-2">
+      <div className="ml-auto flex items-center justify-end gap-x-2">
         <Button variant="secondary" size="icon-lg" className="rounded-2xl">
           <UserButton />
         </Button>
