@@ -4,9 +4,7 @@ import { auth } from '@clerk/nextjs/server'
 import { preloadQuery } from 'convex/nextjs'
 import { notFound, redirect } from 'next/navigation'
 import Lists from './Lists'
-import { Button } from '@/components/ui/button'
-import { UserButton } from '@clerk/nextjs'
-import AddListDialog from '@/components/AddListDialog'
+import Header from '@/components/Header'
 
 export default async function Page() {
   const { userId } = await auth()
@@ -25,15 +23,7 @@ export default async function Page() {
 
   return (
     <main className="relative container mx-auto flex flex-col gap-4 px-4 pt-8">
-      <header>
-        <div className="flex justify-end gap-x-2">
-          <Button variant="secondary" size="icon-lg" className="rounded-2xl">
-            <UserButton />
-          </Button>
-
-          <AddListDialog clerkId={userId} />
-        </div>
-      </header>
+      <Header clerkId={userId} />
       <Lists preloadedLists={data} clerkId={userId} />
     </main>
   )

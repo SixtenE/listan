@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Edit, LogOut, MoreVertical, Trash } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -22,7 +23,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Field, FieldGroup } from '@/components/ui/field'
 import { Textarea } from '@/components/ui/textarea'
-import { useQuery } from 'convex/react'
+import { useQuery, useMutation } from 'convex/react'
 import { api } from '@/convex/_generated/api'
 import { Id } from '@/convex/_generated/dataModel'
 
@@ -32,13 +33,72 @@ interface PageProps {
 }
 
 export default function Page({ listId, clerkId }: PageProps) {
+  const router = useRouter()
   const [showEditDialog, setShowEditDialog] = useState(false)
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
+  const [listName, setListName] = useState('')
 
   const isOwner = useQuery(api.lists.isOwner, {
     listId: listId as Id<'lists'>,
     clerkId,
   })
+
+  const list = useQuery(api.lists.getById, {
+    listId: listId as Id<'lists'>,
+  })
+
+  const renameList = useMutation(api.lists.rename)
+  const deleteList = useMutation(api.lists.remove)
+  const leaveList = useMutation(api.lists.leaveList)
+
+  useEffect(() => {
+    if (list) {
+      setListName(list.name)
+    }
+  }, [list])
+
+  useEffect(() => {
+    if (!showEditDialog && list) {
+      setListName(list.name)
+    }
+  }, [showEditDialog, list])
+
+  async function handleEditSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    const formData = new FormData(event.currentTarget)
+    const newName = formData.get('name') as string
+
+    if (newName.trim() && newName !== list?.name) {
+      await renameList({
+        listId: listId as Id<'lists'>,
+        newName: newName.trim(),
+        clerkId,
+      })
+    }
+    setShowEditDialog(false)
+  }
+
+  async function handleDeleteSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+
+    try {
+      if (isOwner) {
+        await deleteList({
+          listId: listId as Id<'lists'>,
+          clerkId,
+        })
+      } else {
+        await leaveList({
+          listId: listId as Id<'lists'>,
+          clerkId,
+        })
+      }
+      setShowDeleteDialog(false)
+      router.push('/lists')
+    } catch (error) {
+      console.error('Failed to delete/leave list:', error)
+    }
+  }
 
   return (
     <>
@@ -84,43 +144,63 @@ export default function Page({ listId, clerkId }: PageProps) {
         </DropdownMenuContent>
       </DropdownMenu>
       <Dialog open={showEditDialog} onOpenChange={setShowEditDialog}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Edit</DialogTitle>
-          </DialogHeader>
-          <FieldGroup className="pb-3">
-            <Field>
-              <Textarea
-                placeholder="Edit your item..."
-                className="resize-none"
-              />
-            </Field>
-          </FieldGroup>
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
-            </DialogClose>
-            <Button type="submit">Save</Button>
-          </DialogFooter>
+        <DialogContent className="border-none bg-transparent sm:max-w-[425px]">
+          <form onSubmit={handleEditSubmit}>
+            <DialogHeader>
+              <DialogTitle>Edit</DialogTitle>
+            </DialogHeader>
+            <FieldGroup className="pb-3">
+              <Field>
+                <Textarea
+                  name="name"
+                  value={listName}
+                  onChange={(e) => setListName(e.target.value)}
+                  placeholder="Edit your list..."
+                  className="resize-none rounded-xl"
+                />
+              </Field>
+            </FieldGroup>
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button type="button" variant="outline" className="rounded-xl">
+                  Cancel
+                </Button>
+              </DialogClose>
+              <Button type="submit" className="rounded-xl">
+                Save
+              </Button>
+            </DialogFooter>
+          </form>
         </DialogContent>
       </Dialog>
       <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Delete item</DialogTitle>
-            <DialogDescription>
-              Are you sure you want to delete this item? This action cannot be
-              undone.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
-            </DialogClose>
-            <Button type="submit" variant="destructive">
-              Delete
-            </Button>
-          </DialogFooter>
+        <DialogContent className="border-none bg-transparent sm:max-w-[425px]">
+          <form onSubmit={handleDeleteSubmit}>
+            <DialogHeader>
+              <DialogTitle>
+                {isOwner ? 'Delete list' : 'Leave list'}
+              </DialogTitle>
+              <DialogDescription>
+                {isOwner
+                  ? 'Are you sure you want to delete this list? This action cannot be undone.'
+                  : 'Are you sure you want to leave this list? You will no longer have access to it.'}
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button type="button" variant="outline" className="rounded-xl">
+                  Cancel
+                </Button>
+              </DialogClose>
+              <Button
+                type="submit"
+                variant="destructive"
+                className="rounded-xl"
+              >
+                {isOwner ? 'Delete' : 'Leave'}
+              </Button>
+            </DialogFooter>
+          </form>
         </DialogContent>
       </Dialog>
     </>

@@ -4,11 +4,7 @@ import { tryCatch } from '@/lib/utils'
 import { preloadQuery } from 'convex/nextjs'
 import { notFound, redirect } from 'next/navigation'
 import Items from './Items'
-import AddListDialog from '@/components/AddListDialog'
-import { Button } from '@/components/ui/button'
-import { UserButton } from '@clerk/nextjs'
-import Link from 'next/link'
-import { ChevronLeft } from 'lucide-react'
+import Header from '@/components/Header'
 import ItemInput from './ItemInput'
 import { auth } from '@clerk/nextjs/server'
 
@@ -37,26 +33,7 @@ export default async function Page({
 
   return (
     <main className="relative container mx-auto flex flex-col gap-4 px-4 pt-8">
-      <header className="flex w-full items-center justify-between">
-        <Button
-          asChild
-          variant="secondary"
-          className="rounded-2xl"
-          size="icon-lg"
-        >
-          <Link href="/lists">
-            <ChevronLeft />
-          </Link>
-        </Button>
-
-        <div className="flex items-center justify-end gap-x-2">
-          <Button variant="secondary" size="icon-lg" className="rounded-2xl">
-            <UserButton />
-          </Button>
-
-          <AddListDialog clerkId="1" />
-        </div>
-      </header>
+      <Header clerkId={userId} showBackButton backHref="/lists" />
       <Items preloadedList={data} />
       <ItemInput clerkId={userId} listId={listId} />
     </main>

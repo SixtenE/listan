@@ -54,7 +54,7 @@ export default function ItemActions() {
         </DropdownMenuContent>
       </DropdownMenu>
       <Dialog open={showEditDialog} onOpenChange={setShowEditDialog}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="border-none bg-transparent sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Edit</DialogTitle>
           </DialogHeader>
@@ -62,20 +62,24 @@ export default function ItemActions() {
             <Field>
               <Textarea
                 placeholder="Edit your item..."
-                className="resize-none"
+                className="resize-none rounded-xl"
               />
             </Field>
           </FieldGroup>
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
+              <Button variant="outline" className="rounded-xl">
+                Cancel
+              </Button>
             </DialogClose>
-            <Button type="submit">Save</Button>
+            <Button type="submit" className="rounded-xl">
+              Save
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
       <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="border-none bg-transparent sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Delete item</DialogTitle>
             <DialogDescription>
@@ -85,9 +89,11 @@ export default function ItemActions() {
           </DialogHeader>
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
+              <Button variant="outline" className="rounded-xl">
+                Cancel
+              </Button>
             </DialogClose>
-            <Button type="submit" variant="destructive">
+            <Button type="submit" variant="destructive" className="rounded-xl">
               Delete
             </Button>
           </DialogFooter>
