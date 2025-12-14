@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Edit, LogOut, MoreVertical, Trash } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
@@ -51,17 +51,17 @@ export default function Page({ listId, clerkId }: PageProps) {
   const deleteList = useMutation(api.lists.remove)
   const leaveList = useMutation(api.lists.leaveList)
 
-  useEffect(() => {
-    if (list) {
-      setListName(list.name)
-    }
-  }, [list])
+  const handleOpenEditDialog = () => {
+    setListName(list?.name ?? '')
+    setShowEditDialog(true)
+  }
 
-  useEffect(() => {
-    if (!showEditDialog && list) {
-      setListName(list.name)
+  const handleCloseEditDialog = (open: boolean) => {
+    setShowEditDialog(open)
+    if (!open) {
+      setListName(list?.name ?? '')
     }
-  }, [showEditDialog, list])
+  }
 
   async function handleEditSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -128,7 +128,7 @@ export default function Page({ listId, clerkId }: PageProps) {
             <DropdownMenuGroup>
               <DropdownMenuItem
                 className="rounded-lg"
-                onSelect={() => setShowEditDialog(true)}
+                onSelect={handleOpenEditDialog}
               >
                 Edit
                 <Edit className="ml-auto h-4 w-4" />
@@ -154,7 +154,7 @@ export default function Page({ listId, clerkId }: PageProps) {
           )}
         </DropdownMenuContent>
       </DropdownMenu>
-      <Dialog open={showEditDialog} onOpenChange={setShowEditDialog}>
+      <Dialog open={showEditDialog} onOpenChange={handleCloseEditDialog}>
         <DialogContent className="border-none bg-transparent sm:max-w-[425px]">
           <form onSubmit={handleEditSubmit}>
             <DialogHeader>
