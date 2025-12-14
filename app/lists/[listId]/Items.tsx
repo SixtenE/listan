@@ -11,6 +11,13 @@ interface ItemsProps {
 
 export default function Page({ preloadedList, clerkId }: ItemsProps) {
   const list = usePreloadedQuery(preloadedList)
+
+  if (!list || !list._id) {
+    return null
+  }
+
+  const listId = list._id
+
   return (
     <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
       {list.items.map((item) => (
@@ -18,7 +25,7 @@ export default function Page({ preloadedList, clerkId }: ItemsProps) {
           key={item._id}
           itemId={item._id}
           content={item.content}
-          listId={list._id}
+          listId={listId}
           clerkId={clerkId}
         />
       ))}
