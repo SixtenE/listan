@@ -46,8 +46,8 @@ export default function ItemActions({
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
   const [itemContent, setItemContent] = useState(initialContent)
 
-  const editItem = useMutation(api.items.editItem)
-  const deleteItem = useMutation(api.items.remove)
+  const editItem = useMutation(api.items.updateItem)
+  const deleteItem = useMutation(api.items.deleteItem)
 
   useEffect(() => {
     setItemContent(initialContent)
@@ -93,7 +93,7 @@ export default function ItemActions({
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
           <Button
-            className="absolute top-2 right-2 rounded-lg"
+            className="rounded-lg"
             size="icon-sm"
             variant="ghost"
           >
@@ -119,6 +119,9 @@ export default function ItemActions({
           <form onSubmit={handleEditSubmit}>
             <DialogHeader>
               <DialogTitle>Edit</DialogTitle>
+              <DialogDescription>
+                Update the content of this item.
+              </DialogDescription>
             </DialogHeader>
             <FieldGroup className="pb-3">
               <Field>

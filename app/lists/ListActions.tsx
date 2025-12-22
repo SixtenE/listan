@@ -27,28 +27,34 @@ import { useQuery, useMutation } from 'convex/react'
 import { api } from '@/convex/_generated/api'
 import { Id } from '@/convex/_generated/dataModel'
 
-interface PageProps {
+interface ListActionsProps {
+  /** The unique identifier of the list */
   listId: string
+  /** The Clerk user ID of the current user */
   clerkId: string
 }
 
-export default function Page({ listId, clerkId }: PageProps) {
+/**
+ * A dropdown menu component that provides actions for a list.
+ * Shows edit and delete options for owners, or leave option for members.
+ */
+export default function ListActions({ listId, clerkId }: ListActionsProps) {
   const router = useRouter()
   const [showEditDialog, setShowEditDialog] = useState(false)
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
   const [listName, setListName] = useState('')
 
-  const isOwner = useQuery(api.lists.isOwner, {
+  const isOwner = useQuery(api.lists.isListOwner, {
     listId: listId as Id<'lists'>,
     clerkId,
   })
 
-  const list = useQuery(api.lists.getById, {
+  const list = useQuery(api.lists.getListById, {
     listId: listId as Id<'lists'>,
   })
 
-  const renameList = useMutation(api.lists.rename)
-  const deleteList = useMutation(api.lists.remove)
+  const renameList = useMutation(api.lists.renameList)
+  const deleteList = useMutation(api.lists.deleteList)
   const leaveList = useMutation(api.lists.leaveList)
 
   const handleOpenEditDialog = () => {
@@ -158,7 +164,10 @@ export default function Page({ listId, clerkId }: PageProps) {
         <DialogContent className="border-none bg-transparent sm:max-w-[425px]">
           <form onSubmit={handleEditSubmit}>
             <DialogHeader>
-              <DialogTitle>Edit</DialogTitle>
+              <DialogTitle>Edit list</DialogTitle>
+              <DialogDescription>
+                Update the name of this list. Changes will be saved immediately.
+              </DialogDescription>
             </DialogHeader>
             <FieldGroup className="pb-3">
               <Field>

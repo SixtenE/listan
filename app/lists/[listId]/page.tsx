@@ -22,7 +22,7 @@ export default async function Page({
   const { listId } = await params
 
   const { data, error } = await tryCatch(
-    preloadQuery(api.lists.getById, {
+    preloadQuery(api.lists.getListById, {
       listId: listId as Id<'lists'>,
     }),
   )
@@ -32,10 +32,20 @@ export default async function Page({
   }
 
   return (
-    <main className="relative container mx-auto flex flex-col gap-4 px-4 pt-8">
-      <Header clerkId={userId} showBackButton backHref="/lists" />
-      <Items preloadedList={data} clerkId={userId} />
-      <ItemInput clerkId={userId} listId={listId} />
+    <main className="flex h-screen flex-col">
+      <div className="container mx-auto px-4 pt-4">
+        <Header clerkId={userId} showBackButton backHref="/lists" />
+      </div>
+      <div className="flex-1 overflow-y-auto">
+        <div className="container mx-auto px-4 py-4">
+          <Items preloadedList={data} clerkId={userId} />
+        </div>
+      </div>
+      <div className="border-border bg-background border-t">
+        <div className="container mx-auto px-4 py-4">
+          <ItemInput clerkId={userId} listId={listId} />
+        </div>
+      </div>
     </main>
   )
 }

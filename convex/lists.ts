@@ -2,7 +2,7 @@ import { v } from 'convex/values'
 import { internalMutation, mutation, query } from './_generated/server'
 import { api } from './_generated/api'
 
-export const get = query({
+export const getListsByUser = query({
   args: {
     clerkId: v.string(),
   },
@@ -24,7 +24,7 @@ export const get = query({
   },
 })
 
-export const add = mutation({
+export const createList = mutation({
   args: {
     name: v.string(),
     clerkId: v.string(),
@@ -51,7 +51,7 @@ export const add = mutation({
   },
 })
 
-export const getById = query({
+export const getListById = query({
   args: {
     listId: v.id('lists'),
   },
@@ -67,7 +67,7 @@ export const getById = query({
   },
 })
 
-export const isOwner = query({
+export const isListOwner = query({
   args: {
     listId: v.id('lists'),
     clerkId: v.string(),
@@ -84,14 +84,14 @@ export const isOwner = query({
   },
 })
 
-export const rename = mutation({
+export const renameList = mutation({
   args: {
     listId: v.id('lists'),
     newName: v.string(),
     clerkId: v.string(),
   },
   handler: async (ctx, { listId, newName, clerkId }) => {
-    const isListOwner = await ctx.runQuery(api.lists.isOwner, {
+    const isListOwner = await ctx.runQuery(api.lists.isListOwner, {
       listId,
       clerkId,
     })
@@ -104,39 +104,7 @@ export const rename = mutation({
   },
 })
 
-export const leave = mutation({
-  args: {
-    listId: v.id('lists'),
-    clerkId: v.string(),
-  },
-  handler: async (ctx, { listId, clerkId }) => {
-    const isOwner = await ctx.db
-      .query('members')
-      .withIndex('by_listId_role', (q) =>
-        q.eq('listId', listId).eq('role', 'owner'),
-      )
-      .first()
-
-    if (isOwner && isOwner.clerkId === clerkId) {
-      throw new Error('Owners cannot leave the list')
-    }
-
-    const membership = await ctx.db
-      .query('members')
-      .withIndex('by_clerkId_listId', (q) =>
-        q.eq('clerkId', clerkId).eq('listId', listId),
-      )
-      .first()
-
-    if (!membership) {
-      throw new Error('Membership not found')
-    }
-
-    await ctx.db.delete(membership._id)
-  },
-})
-
-export const remove = mutation({
+export const deleteList = mutation({
   args: {
     listId: v.id('lists'),
     clerkId: v.string(),
@@ -228,7 +196,7 @@ export const leaveList = mutation({
   },
 })
 
-export const updateUpdatedAt = internalMutation({
+export const updateListTimestamp = internalMutation({
   args: {
     listId: v.id('lists'),
   },

@@ -2,7 +2,7 @@ import { internal } from './_generated/api'
 import { mutation } from './_generated/server'
 import { v } from 'convex/values'
 
-export const add = mutation({
+export const createItem = mutation({
   args: {
     content: v.string(),
     listId: v.id('lists'),
@@ -26,7 +26,7 @@ export const add = mutation({
       completed: false,
     })
 
-    await ctx.runMutation(internal.lists.updateUpdatedAt, {
+    await ctx.runMutation(internal.lists.updateListTimestamp, {
       listId: args.listId,
     })
 
@@ -34,7 +34,7 @@ export const add = mutation({
   },
 })
 
-export const editItem = mutation({
+export const updateItem = mutation({
   args: {
     itemId: v.id('items'),
     content: v.string(),
@@ -62,13 +62,13 @@ export const editItem = mutation({
       content: args.content,
     })
 
-    await ctx.runMutation(internal.lists.updateUpdatedAt, {
+    await ctx.runMutation(internal.lists.updateListTimestamp, {
       listId: item.listId,
     })
   },
 })
 
-export const toggleCompleted = mutation({
+export const toggleItemCompleted = mutation({
   args: {
     itemId: v.id('items'),
     completed: v.boolean(),
@@ -96,13 +96,13 @@ export const toggleCompleted = mutation({
       completed: args.completed,
     })
 
-    await ctx.runMutation(internal.lists.updateUpdatedAt, {
+    await ctx.runMutation(internal.lists.updateListTimestamp, {
       listId: item.listId,
     })
   },
 })
 
-export const remove = mutation({
+export const deleteItem = mutation({
   args: {
     itemId: v.id('items'),
     clerkId: v.string(),
@@ -127,13 +127,13 @@ export const remove = mutation({
 
     await ctx.db.delete(item._id)
 
-    await ctx.runMutation(internal.lists.updateUpdatedAt, {
+    await ctx.runMutation(internal.lists.updateListTimestamp, {
       listId: item.listId,
     })
   },
 })
 
-export const clearCompleted = mutation({
+export const clearCompletedItems = mutation({
   args: {
     listId: v.id('lists'),
     clerkId: v.string(),
@@ -161,7 +161,7 @@ export const clearCompleted = mutation({
       await ctx.db.delete(item._id)
     }
 
-    await ctx.runMutation(internal.lists.updateUpdatedAt, {
+    await ctx.runMutation(internal.lists.updateListTimestamp, {
       listId: listId,
     })
 
