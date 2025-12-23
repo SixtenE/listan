@@ -33,8 +33,13 @@ export default async function Page({
 
   return (
     <main className="flex h-screen flex-col">
-      <div className="container mx-auto px-4 pt-4">
-        <Header clerkId={userId} showBackButton backHref="/lists" />
+      <div className="container mx-auto px-4 pt-8">
+        <Header
+          clerkId={userId}
+          showBackButton
+          backHref="/lists"
+          showAddListButton={false}
+        />
       </div>
       <div className="flex-1 overflow-y-auto pb-24">
         <div className="container mx-auto px-4 py-4">

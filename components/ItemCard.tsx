@@ -6,6 +6,7 @@ import { useMutation } from 'convex/react'
 import { api } from '@/convex/_generated/api'
 import { Check } from 'lucide-react'
 import { useState, useEffect, useRef } from 'react'
+import { cn } from '@/lib/utils'
 
 interface ItemCardProps {
   itemId: Id<'items'>
@@ -13,6 +14,7 @@ interface ItemCardProps {
   completed: boolean
   listId: Id<'lists'>
   clerkId: string
+  className?: string
 }
 
 export default function ItemCard({
@@ -21,6 +23,7 @@ export default function ItemCard({
   completed,
   listId,
   clerkId,
+  className,
 }: ItemCardProps) {
   const toggleCompleted = useMutation(api.items.toggleItemCompleted)
   const [optimisticCompleted, setOptimisticCompleted] = useState(completed)
@@ -36,11 +39,11 @@ export default function ItemCard({
 
   const handleToggle = async () => {
     const newCompleted = !optimisticCompleted
-    
+
     // Optimistic update - update UI immediately
     isPendingRef.current = true
     setOptimisticCompleted(newCompleted)
-    
+
     try {
       await toggleCompleted({
         itemId,
@@ -62,7 +65,12 @@ export default function ItemCard({
   const displayCompleted = optimisticCompleted
 
   return (
-    <li className="group relative flex items-start gap-2">
+    <li
+      className={cn(
+        'group relative flex w-full items-start gap-2 md:w-auto',
+        className,
+      )}
+    >
       <button
         type="button"
         onClick={handleToggle}
@@ -71,30 +79,27 @@ export default function ItemCard({
             ? 'border-primary bg-primary text-primary-foreground'
             : 'border-muted-foreground/30 hover:border-primary'
         }`}
-        aria-label={displayCompleted ? 'Mark as incomplete' : 'Mark as complete'}
+        aria-label={
+          displayCompleted ? 'Mark as incomplete' : 'Mark as complete'
+        }
       >
         {displayCompleted && <Check className="h-3 w-3" />}
       </button>
       <div
-        className={`bg-muted group-hover:bg-muted/80 flex-1 rounded-xl px-4 py-3 transition-colors ${
-          displayCompleted ? 'opacity-60' : ''
-        }`}
+        className={cn(
+          'bg-muted group-hover:bg-muted/80 relative flex-1 rounded-xl px-6 py-4 transition-colors md:px-8 md:py-5',
+          displayCompleted && 'opacity-60',
+        )}
       >
-        <p
-          className={`text-sm leading-relaxed ${
-            displayCompleted ? 'line-through' : ''
-          }`}
-        >
-          {content}
-        </p>
-      </div>
-      <div className="opacity-0 transition-opacity group-hover:opacity-100">
-        <ItemActions
-          itemId={itemId}
-          listId={listId}
-          clerkId={clerkId}
-          initialContent={content}
-        />
+        <p className="text-sm leading-relaxed">{content}</p>
+        <div className="absolute top-2 right-2">
+          <ItemActions
+            itemId={itemId}
+            listId={listId}
+            clerkId={clerkId}
+            initialContent={content}
+          />
+        </div>
       </div>
     </li>
   )

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { MoreVertical } from 'lucide-react'
+import { Edit, MoreVertical, Trash } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -20,7 +20,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Field, FieldGroup } from '@/components/ui/field'
 import { Textarea } from '@/components/ui/textarea'
 import { useMutation } from 'convex/react'
 import { api } from '@/convex/_generated/api'
@@ -43,7 +42,6 @@ export default function ItemActions({
   void listId
 
   const [showEditDialog, setShowEditDialog] = useState(false)
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
   const [itemContent, setItemContent] = useState(initialContent)
 
   const editItem = useMutation(api.items.updateItem)
@@ -74,15 +72,12 @@ export default function ItemActions({
     setShowEditDialog(false)
   }
 
-  async function handleDeleteSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-
+  async function handleDelete() {
     try {
       await deleteItem({
         itemId,
         clerkId,
       })
-      setShowDeleteDialog(false)
     } catch (error) {
       console.error('Failed to delete item:', error)
     }
@@ -92,30 +87,31 @@ export default function ItemActions({
     <>
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
-          <Button
-            className="rounded-lg"
-            size="icon-sm"
-            variant="ghost"
-          >
+          <Button className="rounded-lg" size="icon-sm" variant="ghost">
             <MoreVertical />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-40" align="end">
+        <DropdownMenuContent className="w-40 rounded-xl" align="end">
           <DropdownMenuGroup>
-            <DropdownMenuItem onSelect={() => setShowEditDialog(true)}>
+            <DropdownMenuItem
+              className="rounded-lg"
+              onSelect={() => setShowEditDialog(true)}
+            >
               Edit
+              <Edit className="ml-auto h-4 w-4" />
             </DropdownMenuItem>
             <DropdownMenuItem
-              onSelect={() => setShowDeleteDialog(true)}
-              className="text-destructive"
+              onSelect={handleDelete}
+              className="text-destructive rounded-lg"
             >
               Delete
+              <Trash className="stroke-destructive ml-auto h-4 w-4" />
             </DropdownMenuItem>
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
       <Dialog open={showEditDialog} onOpenChange={setShowEditDialog}>
-        <DialogContent className="border-none bg-transparent sm:max-w-[425px]">
+        <DialogContent className="bg-background border-none sm:max-w-[425px]">
           <form onSubmit={handleEditSubmit}>
             <DialogHeader>
               <DialogTitle>Edit</DialogTitle>
@@ -123,8 +119,8 @@ export default function ItemActions({
                 Update the content of this item.
               </DialogDescription>
             </DialogHeader>
-            <FieldGroup className="pb-3">
-              <Field>
+            <div className="mt-4 grid gap-4">
+              <div className="grid gap-3">
                 <Textarea
                   name="content"
                   value={itemContent}
@@ -132,9 +128,9 @@ export default function ItemActions({
                   placeholder="Edit your item..."
                   className="resize-none rounded-xl"
                 />
-              </Field>
-            </FieldGroup>
-            <DialogFooter>
+              </div>
+            </div>
+            <DialogFooter className="mt-4">
               <DialogClose asChild>
                 <Button type="button" variant="outline" className="rounded-xl">
                   Cancel
@@ -142,33 +138,6 @@ export default function ItemActions({
               </DialogClose>
               <Button type="submit" className="rounded-xl">
                 Save
-              </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
-      <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-        <DialogContent className="border-none bg-transparent sm:max-w-[425px]">
-          <form onSubmit={handleDeleteSubmit}>
-            <DialogHeader>
-              <DialogTitle>Delete item</DialogTitle>
-              <DialogDescription>
-                Are you sure you want to delete this item? This action cannot be
-                undone.
-              </DialogDescription>
-            </DialogHeader>
-            <DialogFooter>
-              <DialogClose asChild>
-                <Button type="button" variant="outline" className="rounded-xl">
-                  Cancel
-                </Button>
-              </DialogClose>
-              <Button
-                type="submit"
-                variant="destructive"
-                className="rounded-xl"
-              >
-                Delete
               </Button>
             </DialogFooter>
           </form>

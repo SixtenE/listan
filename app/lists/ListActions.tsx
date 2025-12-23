@@ -21,7 +21,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Field, FieldGroup } from '@/components/ui/field'
 import { Textarea } from '@/components/ui/textarea'
 import { useQuery, useMutation } from 'convex/react'
 import { api } from '@/convex/_generated/api'
@@ -161,7 +160,7 @@ export default function ListActions({ listId, clerkId }: ListActionsProps) {
         </DropdownMenuContent>
       </DropdownMenu>
       <Dialog open={showEditDialog} onOpenChange={handleCloseEditDialog}>
-        <DialogContent className="border-none bg-transparent sm:max-w-[425px]">
+        <DialogContent className="bg-background border-none sm:max-w-[425px]">
           <form onSubmit={handleEditSubmit}>
             <DialogHeader>
               <DialogTitle>Edit list</DialogTitle>
@@ -169,8 +168,8 @@ export default function ListActions({ listId, clerkId }: ListActionsProps) {
                 Update the name of this list. Changes will be saved immediately.
               </DialogDescription>
             </DialogHeader>
-            <FieldGroup className="pb-3">
-              <Field>
+            <div className="mt-4 grid gap-4">
+              <div className="grid gap-3">
                 <Textarea
                   name="name"
                   value={listName}
@@ -178,9 +177,9 @@ export default function ListActions({ listId, clerkId }: ListActionsProps) {
                   placeholder="Edit your list..."
                   className="resize-none rounded-xl"
                 />
-              </Field>
-            </FieldGroup>
-            <DialogFooter>
+              </div>
+            </div>
+            <DialogFooter className="mt-4">
               <DialogClose asChild>
                 <Button type="button" variant="outline" className="rounded-xl">
                   Cancel

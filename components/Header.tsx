@@ -8,16 +8,18 @@ interface HeaderProps {
   clerkId: string
   showBackButton?: boolean
   backHref?: string
+  showAddListButton?: boolean
 }
 
 export default function Header({
   clerkId,
   showBackButton = false,
   backHref = '/lists',
+  showAddListButton = true,
 }: HeaderProps) {
   return (
     <header className="flex w-full items-center justify-between">
-      {showBackButton && (
+      {showBackButton ? (
         <Button
           asChild
           variant="secondary"
@@ -28,14 +30,16 @@ export default function Header({
             <ChevronLeft />
           </Link>
         </Button>
+      ) : (
+        <div className="size-10" />
       )}
 
-      <div className="ml-auto flex items-center justify-end gap-x-2">
+      <div className="flex items-center justify-end gap-x-2">
         <Button variant="secondary" size="icon-lg" className="rounded-2xl">
           <UserButton />
         </Button>
 
-        <AddListDialog clerkId={clerkId} />
+        {showAddListButton && <AddListDialog clerkId={clerkId} />}
       </div>
     </header>
   )
