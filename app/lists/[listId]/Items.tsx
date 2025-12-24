@@ -23,6 +23,7 @@ export default function Items({ preloadedList, clerkId, listId }: ItemsProps) {
     return null
   }
 
+  const listIdValue = list._id
   const completedCount = list.items.filter((item) => item.completed).length
   const pendingCount = list.items.filter((item) => !item.completed).length
 
@@ -30,7 +31,7 @@ export default function Items({ preloadedList, clerkId, listId }: ItemsProps) {
     setIsClearing(true)
     try {
       await clearCompletedItems({
-        listId: list._id,
+        listId: listIdValue,
         clerkId,
       })
     } catch (error) {
@@ -94,7 +95,7 @@ export default function Items({ preloadedList, clerkId, listId }: ItemsProps) {
             itemId={item._id}
             content={item.content}
             completed={item.completed}
-            listId={list._id}
+            listId={listIdValue}
             clerkId={clerkId}
           />
         ))}
