@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button'
 import { UserButton } from '@clerk/nextjs'
 import AddListDialog from '@/components/AddListDialog'
 import Link from 'next/link'
-import { ChevronLeft } from 'lucide-react'
+import { ArrowLeft } from 'lucide-react'
 
 interface HeaderProps {
   clerkId: string
@@ -18,28 +18,41 @@ export default function Header({
   showAddListButton = true,
 }: HeaderProps) {
   return (
-    <header className="flex w-full items-center justify-between">
-      {showBackButton ? (
-        <Button
-          asChild
-          variant="secondary"
-          className="rounded-2xl"
-          size="icon-lg"
-        >
-          <Link href={backHref}>
-            <ChevronLeft />
+    <header className="border-border flex w-full items-center justify-between border-b pb-4">
+      <div className="flex items-center gap-4">
+        {showBackButton ? (
+          <Button
+            asChild
+            variant="ghost"
+            size="sm"
+            className="font-mono text-xs tracking-wide"
+          >
+            <Link href={backHref}>
+              <ArrowLeft className="mr-1 h-3 w-3" />
+              back
+            </Link>
+          </Button>
+        ) : (
+          <Link 
+            href="/lists" 
+            className="font-mono text-sm tracking-wider transition-opacity hover:opacity-70"
+          >
+            listan
           </Link>
-        </Button>
-      ) : (
-        <div className="size-10" />
-      )}
+        )}
+      </div>
 
-      <div className="flex items-center justify-end gap-x-2">
-        <Button variant="secondary" size="icon-lg" className="rounded-2xl">
-          <UserButton />
-        </Button>
-
+      <div className="flex items-center gap-3">
         {showAddListButton && <AddListDialog clerkId={clerkId} />}
+        <div className="border-border flex h-8 w-8 items-center justify-center rounded-full border">
+          <UserButton 
+            appearance={{
+              elements: {
+                avatarBox: 'h-6 w-6',
+              }
+            }}
+          />
+        </div>
       </div>
     </header>
   )

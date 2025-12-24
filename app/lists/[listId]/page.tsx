@@ -5,7 +5,6 @@ import { preloadQuery } from 'convex/nextjs'
 import { notFound, redirect } from 'next/navigation'
 import Items from './Items'
 import Header from '@/components/Header'
-import ItemInput from './ItemInput'
 import { auth } from '@clerk/nextjs/server'
 
 export default async function Page({
@@ -32,21 +31,21 @@ export default async function Page({
   }
 
   return (
-    <main className="flex h-screen flex-col">
-      <div className="container mx-auto px-4 pt-8">
+    <div className="min-h-screen">
+      {/* Subtle grid background */}
+      <div className="pointer-events-none fixed inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-size-[64px_64px]" />
+      
+      <main className="relative mx-auto max-w-2xl px-6 py-8">
         <Header
           clerkId={userId}
           showBackButton
           backHref="/lists"
           showAddListButton={false}
         />
-      </div>
-      <div className="flex-1 overflow-y-auto pb-24">
-        <div className="container mx-auto px-4 py-4">
-          <Items preloadedList={data} clerkId={userId} />
+        <div className="mt-8">
+          <Items preloadedList={data} clerkId={userId} listId={listId} />
         </div>
-      </div>
-      <ItemInput clerkId={userId} listId={listId} />
-    </main>
+      </main>
+    </div>
   )
 }

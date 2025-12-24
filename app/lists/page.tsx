@@ -22,9 +22,14 @@ export default async function Page() {
   }
 
   return (
-    <main className="relative container mx-auto flex flex-col gap-4 px-4 pt-8">
-      <Header clerkId={userId} />
-      <Lists preloadedLists={data} clerkId={userId} />
-    </main>
+    <div className="min-h-screen">
+      {/* Subtle grid background */}
+      <div className="pointer-events-none fixed inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-size-[64px_64px]" />
+      
+      <main className="relative mx-auto max-w-2xl px-6 py-8">
+        <Header clerkId={userId} />
+        <Lists preloadedLists={data} clerkId={userId} />
+      </main>
+    </div>
   )
 }

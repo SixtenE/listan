@@ -10,7 +10,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
 import { api } from '@/convex/_generated/api'
 import { useMutation } from 'convex/react'
 import { Plus } from 'lucide-react'
@@ -46,35 +45,40 @@ export default function AddListDialog({ clerkId }: AddListDialogProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="secondary" size="lg" className="rounded-2xl">
-          <Plus className="stroke-3" />
+        <Button variant="ghost" size="sm" className="font-mono text-xs tracking-wide">
+          <Plus className="mr-1 h-3 w-3" />
           new list
         </Button>
       </DialogTrigger>
-      <DialogContent className="bg-background border-none sm:max-w-[425px]">
+      <DialogContent className="border-border bg-background max-w-md border">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle>Create new list</DialogTitle>
-            <DialogDescription>
-              Enter a name for your new list. You can edit it later if needed.
+            <DialogTitle className="font-medium tracking-tight">
+              Create new list
+            </DialogTitle>
+            <DialogDescription className="font-mono text-xs">
+              Enter a name for your new list.
             </DialogDescription>
           </DialogHeader>
-          <div className="mt-4 grid gap-4">
-            <div className="grid gap-3">
-              <Input
-                id="name"
-                name="name"
-                value={listName}
-                onChange={(e) => setListName(e.target.value)}
-                placeholder="Enter list name..."
-                className="rounded-xl"
-                autoFocus
-              />
-            </div>
+          <div className="mt-6">
+            <input
+              id="name"
+              name="name"
+              value={listName}
+              onChange={(e) => setListName(e.target.value)}
+              placeholder="List name..."
+              className="border-border bg-transparent placeholder:text-muted-foreground w-full border-b py-2 font-mono text-sm outline-none transition-colors focus:border-foreground"
+              autoFocus
+            />
           </div>
-          <DialogFooter className="mt-4">
-            <Button type="submit" className="rounded-xl" disabled={!listName.trim()}>
-              Create
+          <DialogFooter className="mt-6">
+            <Button 
+              type="submit" 
+              size="sm"
+              className="font-mono text-xs tracking-wide" 
+              disabled={!listName.trim()}
+            >
+              create
             </Button>
           </DialogFooter>
         </form>

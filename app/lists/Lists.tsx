@@ -21,10 +21,15 @@ export default function Lists({ preloadedLists, clerkId }: ListsProps) {
 
   if (lists.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-16 text-center">
-        <h2 className="mb-2 text-2xl font-semibold">No lists yet</h2>
-        <p className="text-muted-foreground max-w-md text-sm">
-          Get started by creating your first list. You can organize your items
+      <div className="flex flex-col items-center justify-center py-24 text-center">
+        <span className="font-mono text-muted-foreground text-xs tracking-widest uppercase">
+          No lists yet
+        </span>
+        <h2 className="mt-4 text-2xl font-medium tracking-tight">
+          Create your first list
+        </h2>
+        <p className="text-muted-foreground mt-2 max-w-sm font-mono text-sm">
+          Get started by creating a new list. You can organize your items
           and share lists with others.
         </p>
       </div>
@@ -32,16 +37,26 @@ export default function Lists({ preloadedLists, clerkId }: ListsProps) {
   }
 
   return (
-    <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-      {lists.map((list) => (
-        <ListCard
-          key={list._id}
-          listId={list._id}
-          name={list.name}
-          updatedAt={list.updatedAt}
-          clerkId={clerkId}
-        />
-      ))}
-    </ul>
+    <div className="mt-8">
+      <div className="mb-4 flex items-center justify-between">
+        <span className="font-mono text-muted-foreground text-xs tracking-widest uppercase">
+          Your lists
+        </span>
+        <span className="font-mono text-muted-foreground text-xs">
+          {lists.length} {lists.length === 1 ? 'list' : 'lists'}
+        </span>
+      </div>
+      <ul className="divide-y-0">
+        {lists.map((list) => (
+          <ListCard
+            key={list._id}
+            listId={list._id}
+            name={list.name}
+            updatedAt={list.updatedAt}
+            clerkId={clerkId}
+          />
+        ))}
+      </ul>
+    </div>
   )
 }

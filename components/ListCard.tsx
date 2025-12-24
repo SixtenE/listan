@@ -1,10 +1,10 @@
 'use client'
 
-import { Card, CardContent } from '@/components/ui/card'
 import Link from 'next/link'
 import ListActions from '@/app/lists/ListActions'
 import { formatDistanceToNow } from 'date-fns'
 import { Id } from '@/convex/_generated/dataModel'
+import { ArrowUpRight } from 'lucide-react'
 
 interface ListCardProps {
   /** The unique identifier of the list */
@@ -28,20 +28,24 @@ export default function ListCard({
   clerkId,
 }: ListCardProps) {
   return (
-    <li className="relative">
-      <ListActions clerkId={clerkId} listId={listId} />
-      <Link href={`/lists/${listId}`}>
-        <Card className="group w-full border-none">
-          <CardContent>
-            <p className="text-xl font-medium">{name}</p>
-            <p className="text-muted-foreground text-xs">
-              {formatDistanceToNow(new Date(updatedAt), {
-                addSuffix: true,
-              })}
-            </p>
-          </CardContent>
-        </Card>
+    <li className="group relative">
+      <Link 
+        href={`/lists/${listId}`}
+        className="hover:bg-muted/50 flex items-start justify-between py-4 transition-colors"
+      >
+        <div className="flex-1">
+          <p className="font-medium">{name}</p>
+          <p className="text-muted-foreground mt-1 font-mono text-xs">
+            {formatDistanceToNow(new Date(updatedAt), {
+              addSuffix: true,
+            })}
+          </p>
+        </div>
+        <ArrowUpRight className="text-muted-foreground h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100" />
       </Link>
+      <div className="absolute top-4 right-6">
+        <ListActions clerkId={clerkId} listId={listId} />
+      </div>
     </li>
   )
 }

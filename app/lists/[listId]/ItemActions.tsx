@@ -20,7 +20,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Textarea } from '@/components/ui/textarea'
 import { useMutation } from 'convex/react'
 import { api } from '@/convex/_generated/api'
 import { Id } from '@/convex/_generated/dataModel'
@@ -87,57 +86,57 @@ export default function ItemActions({
     <>
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
-          <Button className="rounded-lg" size="icon-sm" variant="ghost">
-            <MoreVertical />
+          <Button className="h-6 w-6" size="icon-sm" variant="ghost">
+            <MoreVertical className="h-3 w-3" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-40 rounded-xl" align="end">
+        <DropdownMenuContent className="border-border w-32 border" align="end">
           <DropdownMenuGroup>
             <DropdownMenuItem
-              className="rounded-lg"
+              className="font-mono text-xs"
               onSelect={() => setShowEditDialog(true)}
             >
-              Edit
-              <Edit className="ml-auto h-4 w-4" />
+              edit
+              <Edit className="ml-auto h-3 w-3" />
             </DropdownMenuItem>
             <DropdownMenuItem
               onSelect={handleDelete}
-              className="text-destructive rounded-lg"
+              className="text-destructive font-mono text-xs"
             >
-              Delete
-              <Trash className="stroke-destructive ml-auto h-4 w-4" />
+              delete
+              <Trash className="stroke-destructive ml-auto h-3 w-3" />
             </DropdownMenuItem>
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
       <Dialog open={showEditDialog} onOpenChange={setShowEditDialog}>
-        <DialogContent className="bg-background border-none sm:max-w-[425px]">
+        <DialogContent>
           <form onSubmit={handleEditSubmit}>
             <DialogHeader>
-              <DialogTitle>Edit</DialogTitle>
+              <DialogTitle>Edit item</DialogTitle>
               <DialogDescription>
                 Update the content of this item.
               </DialogDescription>
             </DialogHeader>
-            <div className="mt-4 grid gap-4">
-              <div className="grid gap-3">
-                <Textarea
-                  name="content"
-                  value={itemContent}
-                  onChange={(e) => setItemContent(e.target.value)}
-                  placeholder="Edit your item..."
-                  className="resize-none rounded-xl"
-                />
-              </div>
+            <div className="mt-6">
+              <textarea
+                name="content"
+                value={itemContent}
+                onChange={(e) => setItemContent(e.target.value)}
+                placeholder="Item content..."
+                rows={3}
+                className="border-border bg-transparent placeholder:text-muted-foreground w-full resize-none border-b py-2 font-mono text-sm outline-none transition-colors focus:border-foreground"
+                autoFocus
+              />
             </div>
-            <DialogFooter className="mt-4">
+            <DialogFooter className="mt-6">
               <DialogClose asChild>
-                <Button type="button" variant="outline" className="rounded-xl">
-                  Cancel
+                <Button type="button" variant="ghost" size="sm" className="font-mono text-xs">
+                  cancel
                 </Button>
               </DialogClose>
-              <Button type="submit" className="rounded-xl">
-                Save
+              <Button type="submit" size="sm" className="font-mono text-xs">
+                save
               </Button>
             </DialogFooter>
           </form>

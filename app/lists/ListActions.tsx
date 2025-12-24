@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Edit, LogOut, MoreVertical, Trash } from 'lucide-react'
+import { Edit, LogOut, MoreVertical, Trash, Link2, Check, Share } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
 import { Button } from '@/components/ui/button'
@@ -21,7 +21,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Textarea } from '@/components/ui/textarea'
 import { useQuery, useMutation } from 'convex/react'
 import { api } from '@/convex/_generated/api'
 import { Id } from '@/convex/_generated/dataModel'
@@ -41,7 +40,9 @@ export default function ListActions({ listId, clerkId }: ListActionsProps) {
   const router = useRouter()
   const [showEditDialog, setShowEditDialog] = useState(false)
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
+  const [showShareDialog, setShowShareDialog] = useState(false)
   const [listName, setListName] = useState('')
+  const [copied, setCopied] = useState(false)
 
   const isOwner = useQuery(api.lists.isListOwner, {
     listId: listId as Id<'lists'>,
@@ -65,6 +66,24 @@ export default function ListActions({ listId, clerkId }: ListActionsProps) {
     setShowEditDialog(open)
     if (!open) {
       setListName(list?.name ?? '')
+    }
+  }
+
+  const getShareLink = () => {
+    if (typeof window !== 'undefined') {
+      return `${window.location.origin}/join/${listId}`
+    }
+    return ''
+  }
+
+  const handleCopyLink = async () => {
+    const link = getShareLink()
+    try {
+      await navigator.clipboard.writeText(link)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch (error) {
+      console.error('Failed to copy link:', error)
     }
   }
 
@@ -115,85 +134,157 @@ export default function ListActions({ listId, clerkId }: ListActionsProps) {
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
           <Button
-            className="absolute top-2 right-2 rounded-lg"
+            className="h-6 w-6"
             size="icon-sm"
             variant="ghost"
           >
-            <MoreVertical />
+            <MoreVertical className="h-3 w-3" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-40 rounded-xl" align="end">
+        <DropdownMenuContent className="border-border w-32 border" align="end">
           {isOwner === undefined ? (
             <DropdownMenuGroup>
-              <DropdownMenuItem disabled className="rounded-lg">
+              <DropdownMenuItem disabled className="font-mono text-xs">
                 Loading...
               </DropdownMenuItem>
             </DropdownMenuGroup>
-          ) : isOwner ? (
-            <DropdownMenuGroup>
-              <DropdownMenuItem
-                className="rounded-lg"
-                onSelect={handleOpenEditDialog}
-              >
-                Edit
-                <Edit className="ml-auto h-4 w-4" />
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onSelect={() => setShowDeleteDialog(true)}
-                className="text-destructive rounded-lg"
-              >
-                Delete
-                <Trash className="stroke-destructive ml-auto h-4 w-4" />
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
           ) : (
-            <DropdownMenuGroup>
-              <DropdownMenuItem
-                onSelect={() => setShowDeleteDialog(true)}
-                className="text-destructive rounded-lg"
-              >
-                Leave
-                <LogOut className="stroke-destructive ml-auto h-4 w-4" />
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
+            <>
+              <DropdownMenuGroup>
+                <DropdownMenuItem
+                  className="font-mono text-xs"
+                  onSelect={() => setShowShareDialog(true)}
+                >
+                  invite
+                  <Link2 className="ml-auto h-3 w-3" />
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+              {isOwner ? (
+                <DropdownMenuGroup>
+                  <DropdownMenuItem
+                    className="font-mono text-xs"
+                    onSelect={handleOpenEditDialog}
+                  >
+                    edit
+                    <Edit className="ml-auto h-3 w-3" />
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onSelect={() => setShowDeleteDialog(true)}
+                    className="text-destructive font-mono text-xs"
+                  >
+                    delete
+                    <Trash className="stroke-destructive ml-auto h-3 w-3" />
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+              ) : (
+                <DropdownMenuGroup>
+                  <DropdownMenuItem
+                    onSelect={() => setShowDeleteDialog(true)}
+                    className="text-destructive font-mono text-xs"
+                  >
+                    leave
+                    <LogOut className="stroke-destructive ml-auto h-3 w-3" />
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+              )}
+            </>
           )}
         </DropdownMenuContent>
       </DropdownMenu>
+
+      {/* Share Dialog */}
+      <Dialog open={showShareDialog} onOpenChange={setShowShareDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Invite to list</DialogTitle>
+            <DialogDescription>
+              Share this link to invite others to your list.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="mt-4 overflow-hidden">
+            <div className="border-border flex items-center gap-2 border p-3">
+              <code className="text-muted-foreground block w-0 flex-1 overflow-hidden text-ellipsis whitespace-nowrap font-mono text-xs">
+                {getShareLink()}
+              </code>
+              <Button
+                type="button"
+                size="sm"
+                variant="ghost"
+                className="shrink-0 font-mono text-xs"
+                onClick={handleCopyLink}
+              >
+                {copied ? (
+                  <>
+                    <Check className="mr-1 h-3 w-3" />
+                    copied
+                  </>
+                ) : (
+                  'copy'
+                )}
+              </Button>
+            </div>
+            {typeof navigator !== 'undefined' && navigator.share && (
+              <Button
+                type="button"
+                className="mt-3 w-full font-mono text-xs"
+                onClick={async () => {
+                  try {
+                    await navigator.share({
+                      title: `Join "${list?.name}" on listan`,
+                      text: 'You\'ve been invited to collaborate on a shopping list',
+                      url: getShareLink(),
+                    })
+                  } catch (err) {
+                    // User cancelled or share failed
+                    console.log('Share cancelled or failed:', err)
+                  }
+                }}
+              >
+                <Share className="mr-2 h-3 w-3" />
+                share
+              </Button>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Dialog */}
       <Dialog open={showEditDialog} onOpenChange={handleCloseEditDialog}>
-        <DialogContent className="bg-background border-none sm:max-w-[425px]">
+        <DialogContent>
           <form onSubmit={handleEditSubmit}>
             <DialogHeader>
               <DialogTitle>Edit list</DialogTitle>
               <DialogDescription>
-                Update the name of this list. Changes will be saved immediately.
+                Update the name of this list.
               </DialogDescription>
             </DialogHeader>
-            <div className="mt-4 grid gap-4">
-              <div className="grid gap-3">
-                <Textarea
-                  name="name"
-                  value={listName}
-                  onChange={(e) => setListName(e.target.value)}
-                  placeholder="Edit your list..."
-                  className="resize-none rounded-xl"
-                />
-              </div>
+            <div className="mt-6">
+              <input
+                name="name"
+                value={listName}
+                onChange={(e) => setListName(e.target.value)}
+                placeholder="List name..."
+                className="border-border bg-transparent placeholder:text-muted-foreground w-full border-b py-2 font-mono text-sm outline-none transition-colors focus:border-foreground"
+                autoFocus
+              />
             </div>
-            <DialogFooter className="mt-4">
+            <DialogFooter className="mt-6">
               <DialogClose asChild>
-                <Button type="button" variant="outline" className="rounded-xl">
-                  Cancel
+                <Button type="button" variant="ghost" size="sm" className="font-mono text-xs">
+                  cancel
                 </Button>
               </DialogClose>
-              <Button type="submit" className="rounded-xl">
-                Save
+              <Button type="submit" size="sm" className="font-mono text-xs">
+                save
               </Button>
             </DialogFooter>
           </form>
         </DialogContent>
       </Dialog>
+
+      {/* Delete/Leave Dialog */}
       <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-        <DialogContent className="border-none bg-transparent sm:max-w-[425px]">
+        <DialogContent>
           <form onSubmit={handleDeleteSubmit}>
             <DialogHeader>
               <DialogTitle>
@@ -207,27 +298,28 @@ export default function ListActions({ listId, clerkId }: ListActionsProps) {
                 {isOwner === undefined
                   ? 'Please wait...'
                   : isOwner
-                    ? 'Are you sure you want to delete this list? This action cannot be undone.'
-                    : 'Are you sure you want to leave this list? You will no longer have access to it.'}
+                    ? 'Are you sure? This action cannot be undone.'
+                    : 'Are you sure you want to leave this list?'}
               </DialogDescription>
             </DialogHeader>
-            <DialogFooter>
+            <DialogFooter className="mt-6">
               <DialogClose asChild>
-                <Button type="button" variant="outline" className="rounded-xl">
-                  Cancel
+                <Button type="button" variant="ghost" size="sm" className="font-mono text-xs">
+                  cancel
                 </Button>
               </DialogClose>
               <Button
                 type="submit"
                 variant="destructive"
-                className="rounded-xl"
+                size="sm"
+                className="font-mono text-xs"
                 disabled={isOwner === undefined}
               >
                 {isOwner === undefined
-                  ? 'Loading...'
+                  ? 'loading...'
                   : isOwner
-                    ? 'Delete'
-                    : 'Leave'}
+                    ? 'delete'
+                    : 'leave'}
               </Button>
             </DialogFooter>
           </form>

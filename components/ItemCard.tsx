@@ -67,39 +67,40 @@ export default function ItemCard({
   return (
     <li
       className={cn(
-        'group relative flex w-full items-start gap-2 md:w-auto',
+        'group relative flex w-full items-start gap-3 py-3',
         className,
       )}
     >
       <button
         type="button"
         onClick={handleToggle}
-        className={`mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded border-2 transition-colors ${
+        className={cn(
+          'border-border mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-sm border transition-all',
           displayCompleted
-            ? 'border-primary bg-primary text-primary-foreground'
-            : 'border-muted-foreground/30 hover:border-primary'
-        }`}
+            ? 'border-foreground bg-foreground text-background'
+            : 'hover:border-foreground/50'
+        )}
         aria-label={
           displayCompleted ? 'Mark as incomplete' : 'Mark as complete'
         }
       >
-        {displayCompleted && <Check className="h-3 w-3" />}
+        {displayCompleted && <Check className="h-2.5 w-2.5" />}
       </button>
-      <div
-        className={cn(
-          'bg-muted group-hover:bg-muted/80 relative flex-1 rounded-xl px-6 py-4 transition-colors md:px-8 md:py-5',
-          displayCompleted && 'opacity-60',
-        )}
-      >
-        <p className="text-sm leading-relaxed">{content}</p>
-        <div className="absolute top-2 right-2">
-          <ItemActions
-            itemId={itemId}
-            listId={listId}
-            clerkId={clerkId}
-            initialContent={content}
-          />
-        </div>
+      <div className="flex-1">
+        <p className={cn(
+          'text-sm leading-relaxed transition-opacity',
+          displayCompleted && 'text-muted-foreground line-through opacity-60'
+        )}>
+          {content}
+        </p>
+      </div>
+      <div className="opacity-0 transition-opacity group-hover:opacity-100">
+        <ItemActions
+          itemId={itemId}
+          listId={listId}
+          clerkId={clerkId}
+          initialContent={content}
+        />
       </div>
     </li>
   )

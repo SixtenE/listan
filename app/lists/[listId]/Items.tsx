@@ -6,13 +6,15 @@ import ItemCard from '@/components/ItemCard'
 import { Button } from '@/components/ui/button'
 import { useMutation } from 'convex/react'
 import { useState } from 'react'
+import ItemInput from './ItemInput'
 
 interface ItemsProps {
   preloadedList: Preloaded<typeof api.lists.getListById>
   clerkId: string
+  listId: string
 }
 
-export default function Items({ preloadedList, clerkId }: ItemsProps) {
+export default function Items({ preloadedList, clerkId, listId }: ItemsProps) {
   const list = usePreloadedQuery(preloadedList)
   const clearCompletedItems = useMutation(api.items.clearCompletedItems)
   const [isClearing, setIsClearing] = useState(false)
@@ -21,14 +23,14 @@ export default function Items({ preloadedList, clerkId }: ItemsProps) {
     return null
   }
 
-  const listId = list._id
   const completedCount = list.items.filter((item) => item.completed).length
+  const pendingCount = list.items.filter((item) => !item.completed).length
 
   const handleClearCompleted = async () => {
     setIsClearing(true)
     try {
       await clearCompletedItems({
-        listId,
+        listId: list._id,
         clerkId,
       })
     } catch (error) {
@@ -40,39 +42,60 @@ export default function Items({ preloadedList, clerkId }: ItemsProps) {
 
   if (list.items.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-16 text-center">
-        <h2 className="mb-2 text-2xl font-semibold">No items yet</h2>
-        <p className="text-muted-foreground max-w-md text-sm">
+      <div className="flex flex-col">
+        <h2 className="text-2xl font-medium tracking-tight">
+          {list.name}
+        </h2>
+        <p className="text-muted-foreground mt-1 font-mono text-xs">
           Add your first item to get started.
         </p>
+        <div className="mt-6">
+          <ItemInput clerkId={clerkId} listId={listId} />
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-6">
+      {/* List header */}
+      <div>
+        <h1 className="text-2xl font-medium tracking-tight">{list.name}</h1>
+        <div className="text-muted-foreground mt-1 flex items-center gap-4 font-mono text-xs">
+          <span>{pendingCount} pending</span>
+          <span className="text-muted-foreground/50">•</span>
+          <span>{completedCount} completed</span>
+        </div>
+      </div>
+
+      {/* Item input */}
+      <ItemInput clerkId={clerkId} listId={listId} />
+
+      {/* Clear completed button */}
       {completedCount > 0 && (
         <div className="flex justify-end">
           <Button
             onClick={handleClearCompleted}
             disabled={isClearing}
-            variant="secondary"
-            className="rounded-xl border-0 bg-muted/60 hover:bg-muted/80"
+            variant="ghost"
+            size="sm"
+            className="font-mono text-xs tracking-wide"
           >
-            Clear all completed ({completedCount})
+            clear completed ({completedCount})
           </Button>
         </div>
       )}
-      <ul className="flex flex-col gap-2 md:flex-row md:flex-wrap">
+
+      {/* Items list */}
+      <ul>
         {list.items.map((item) => (
           <ItemCard
             key={item._id}
             itemId={item._id}
             content={item.content}
             completed={item.completed}
-            listId={listId}
+            listId={list._id}
             clerkId={clerkId}
-            className="md:min-w-[280px] md:flex-[1_1_280px]"
           />
         ))}
       </ul>
