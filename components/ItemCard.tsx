@@ -67,7 +67,8 @@ export default function ItemCard({
   return (
     <li
       className={cn(
-        'group relative flex w-full items-start gap-3 py-3',
+        'group relative flex w-full items-start gap-4 rounded-xl border border-border/40 bg-card p-4 transition-all hover:border-border',
+        displayCompleted && 'bg-secondary/30 border-transparent hover:border-border/40',
         className,
       )}
     >
@@ -75,21 +76,21 @@ export default function ItemCard({
         type="button"
         onClick={handleToggle}
         className={cn(
-          'border-border mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-sm border transition-all',
+          'mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border transition-all',
           displayCompleted
             ? 'border-foreground bg-foreground text-background'
-            : 'hover:border-foreground/50'
+            : 'border-muted-foreground/30 hover:border-foreground'
         )}
         aria-label={
           displayCompleted ? 'Mark as incomplete' : 'Mark as complete'
         }
       >
-        {displayCompleted && <Check className="h-2.5 w-2.5" />}
+        {displayCompleted && <Check className="h-3 w-3" />}
       </button>
-      <div className="flex-1">
+      <div className="flex-1 min-w-0">
         <p className={cn(
-          'text-sm leading-relaxed transition-opacity',
-          displayCompleted && 'text-muted-foreground line-through opacity-60'
+          'text-sm leading-relaxed transition-opacity break-words',
+          displayCompleted ? 'text-muted-foreground line-through opacity-60' : 'text-foreground'
         )}>
           {content}
         </p>

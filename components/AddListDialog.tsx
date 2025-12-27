@@ -50,13 +50,13 @@ export default function AddListDialog({ clerkId }: AddListDialogProps) {
           new list
         </Button>
       </DialogTrigger>
-      <DialogContent className="border-border bg-background max-w-md border">
+      <DialogContent className="max-w-md">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle className="font-medium tracking-tight">
+            <DialogTitle>
               Create new list
             </DialogTitle>
-            <DialogDescription className="font-mono text-xs">
+            <DialogDescription>
               Enter a name for your new list.
             </DialogDescription>
           </DialogHeader>
@@ -67,7 +67,7 @@ export default function AddListDialog({ clerkId }: AddListDialogProps) {
               value={listName}
               onChange={(e) => setListName(e.target.value)}
               placeholder="List name..."
-              className="border-border bg-transparent placeholder:text-muted-foreground w-full border-b py-2 font-mono text-sm outline-none transition-colors focus:border-foreground"
+              className="w-full rounded-lg border border-border/40 bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus:border-border focus:outline-none"
               autoFocus
             />
           </div>
@@ -75,10 +75,9 @@ export default function AddListDialog({ clerkId }: AddListDialogProps) {
             <Button 
               type="submit" 
               size="sm"
-              className="font-mono text-xs tracking-wide" 
               disabled={!listName.trim()}
             >
-              create
+              Create
             </Button>
           </DialogFooter>
         </form>

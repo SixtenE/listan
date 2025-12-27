@@ -18,41 +18,39 @@ export default function Header({
   showAddListButton = true,
 }: HeaderProps) {
   return (
-    <header className="border-border flex w-full items-center justify-between border-b pb-4">
+    <header className="flex w-full items-center justify-between py-6">
       <div className="flex items-center gap-4">
         {showBackButton ? (
           <Button
             asChild
             variant="ghost"
             size="sm"
-            className="font-mono text-xs tracking-wide"
+            className="text-muted-foreground hover:text-foreground -ml-3"
           >
             <Link href={backHref}>
-              <ArrowLeft className="mr-1 h-3 w-3" />
-              back
+              <ArrowLeft className="mr-1 h-4 w-4" />
+              Back
             </Link>
           </Button>
         ) : (
-          <Link 
-            href="/lists" 
-            className="font-mono text-sm tracking-wider transition-opacity hover:opacity-70"
+          <Link
+            href="/lists"
+            className="font-mono text-lg font-medium tracking-tight"
           >
             listan
           </Link>
         )}
       </div>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-4">
         {showAddListButton && <AddListDialog clerkId={clerkId} />}
-        <div className="border-border flex h-8 w-8 items-center justify-center rounded-full border">
-          <UserButton 
-            appearance={{
-              elements: {
-                avatarBox: 'h-6 w-6',
-              }
-            }}
-          />
-        </div>
+        <UserButton
+          appearance={{
+            elements: {
+              avatarBox: 'h-8 w-8',
+            },
+          }}
+        />
       </div>
     </header>
   )

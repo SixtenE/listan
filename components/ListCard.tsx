@@ -4,7 +4,6 @@ import Link from 'next/link'
 import ListActions from '@/app/lists/ListActions'
 import { formatDistanceToNow } from 'date-fns'
 import { Id } from '@/convex/_generated/dataModel'
-import { ArrowUpRight } from 'lucide-react'
 
 interface ListCardProps {
   /** The unique identifier of the list */
@@ -27,25 +26,36 @@ export default function ListCard({
   updatedAt,
   clerkId,
 }: ListCardProps) {
+  const handleActionsClick = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+  }
+
   return (
-    <li className="group relative">
-      <Link 
-        href={`/lists/${listId}`}
-        className="hover:bg-muted/50 flex items-start justify-between py-4 transition-colors"
-      >
-        <div className="flex-1">
-          <p className="font-medium">{name}</p>
-          <p className="text-muted-foreground mt-1 font-mono text-xs">
-            {formatDistanceToNow(new Date(updatedAt), {
-              addSuffix: true,
-            })}
-          </p>
+    <Link
+      href={`/lists/${listId}`}
+      className="group border-border/40 from-card to-secondary hover:border-border relative flex flex-col rounded-2xl border bg-linear-to-bl p-6 transition-colors sm:p-8"
+    >
+      <div className="mb-8 flex items-start justify-between">
+        <div>
+          <h3 className="font-medium text-foreground">
+            {name}
+          </h3>
+          <p className="mt-1 text-xs text-muted-foreground">Shopping List</p>
         </div>
-        <ArrowUpRight className="text-muted-foreground h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100" />
-      </Link>
-      <div className="absolute top-4 right-6">
-        <ListActions clerkId={clerkId} listId={listId} />
+        <div className="flex items-center gap-2">
+          {/* Actions Menu */}
+          <div className="relative z-10" onClick={handleActionsClick}>
+            <ListActions clerkId={clerkId} listId={listId} />
+          </div>
+        </div>
       </div>
-    </li>
+      
+      <div className="mt-auto">
+        <p className="text-sm leading-relaxed text-muted-foreground/80">
+          Updated {formatDistanceToNow(new Date(updatedAt), { addSuffix: true })}
+        </p>
+      </div>
+    </Link>
   )
 }

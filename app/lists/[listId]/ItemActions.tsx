@@ -125,18 +125,18 @@ export default function ItemActions({
                 onChange={(e) => setItemContent(e.target.value)}
                 placeholder="Item content..."
                 rows={3}
-                className="border-border bg-transparent placeholder:text-muted-foreground w-full resize-none border-b py-2 font-mono text-sm outline-none transition-colors focus:border-foreground"
+                className="w-full resize-none rounded-lg border border-border/40 bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus:border-border focus:outline-none"
                 autoFocus
               />
             </div>
             <DialogFooter className="mt-6">
               <DialogClose asChild>
-                <Button type="button" variant="ghost" size="sm" className="font-mono text-xs">
-                  cancel
+                <Button type="button" variant="ghost" size="sm">
+                  Cancel
                 </Button>
               </DialogClose>
-              <Button type="submit" size="sm" className="font-mono text-xs">
-                save
+              <Button type="submit" size="sm">
+                Save
               </Button>
             </DialogFooter>
           </form>
