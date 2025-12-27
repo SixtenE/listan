@@ -34,7 +34,7 @@ export default function ListCard({
   return (
     <Link
       href={`/lists/${listId}`}
-      className="group border-border/40 from-card to-secondary hover:border-border relative flex flex-col rounded-2xl border bg-linear-to-bl p-6 transition-colors sm:p-8 block"
+      className="group border-border/40 from-card to-secondary hover:border-border relative flex flex-col rounded-2xl border bg-linear-to-bl p-6 transition-colors sm:p-8"
     >
       <div className="mb-8 flex items-start justify-between">
         <div>
