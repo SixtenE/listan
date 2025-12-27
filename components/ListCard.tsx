@@ -26,30 +26,36 @@ export default function ListCard({
   updatedAt,
   clerkId,
 }: ListCardProps) {
+  const handleActionsClick = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+  }
+
   return (
-    <div className="group border-border/40 from-card to-secondary hover:border-border relative flex flex-col rounded-2xl border bg-linear-to-bl p-6 transition-colors sm:p-8">
+    <Link
+      href={`/lists/${listId}`}
+      className="group border-border/40 from-card to-secondary hover:border-border relative flex flex-col rounded-2xl border bg-linear-to-bl p-6 transition-colors sm:p-8 block"
+    >
       <div className="mb-8 flex items-start justify-between">
         <div>
           <h3 className="font-medium text-foreground">
-            <Link href={`/lists/${listId}`} className="hover:underline">
-              {name}
-            </Link>
+            {name}
           </h3>
           <p className="mt-1 text-xs text-muted-foreground">Shopping List</p>
         </div>
         <div className="flex items-center gap-2">
           {/* Actions Menu */}
-          <div className="relative z-10">
+          <div className="relative z-10" onClick={handleActionsClick}>
             <ListActions clerkId={clerkId} listId={listId} />
           </div>
         </div>
       </div>
       
-      <Link href={`/lists/${listId}`} className="mt-auto block">
+      <div className="mt-auto">
         <p className="text-sm leading-relaxed text-muted-foreground/80">
           Updated {formatDistanceToNow(new Date(updatedAt), { addSuffix: true })}
         </p>
-      </Link>
-    </div>
+      </div>
+    </Link>
   )
 }

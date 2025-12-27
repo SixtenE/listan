@@ -33,9 +33,9 @@ export default function Header({
             </Link>
           </Button>
         ) : (
-          <Link 
-            href="/lists" 
-            className="font-serif text-lg font-medium tracking-tight italic"
+          <Link
+            href="/lists"
+            className="font-mono text-lg font-medium tracking-tight"
           >
             listan
           </Link>
@@ -44,11 +44,11 @@ export default function Header({
 
       <div className="flex items-center gap-4">
         {showAddListButton && <AddListDialog clerkId={clerkId} />}
-        <UserButton 
+        <UserButton
           appearance={{
             elements: {
               avatarBox: 'h-8 w-8',
-            }
+            },
           }}
         />
       </div>

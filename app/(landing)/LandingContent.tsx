@@ -1,27 +1,15 @@
 'use client'
 
-import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import * as motion from 'motion/react-client'
-import {
-  LayoutTemplate,
-  Moon,
-  RefreshCcw,
-  Users,
-  WifiOff,
-  Zap,
-  ArrowRight,
-} from 'lucide-react'
+import { RefreshCcw, Users, ArrowRight } from 'lucide-react'
 
 export function LandingContent() {
   return (
     <div className="relative flex min-h-screen flex-col font-sans">
       {/* Navbar */}
       <nav className="flex items-center justify-between px-6 py-6 md:px-12">
-        <Link
-          href="/"
-          className="font-mono text-lg font-medium tracking-tight italic"
-        >
+        <Link href="/" className="font-mono text-lg font-medium tracking-tight">
           listan
         </Link>
         <div className="flex items-center gap-4 text-sm md:gap-6">
