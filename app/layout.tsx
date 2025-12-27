@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { JetBrains_Mono, Inter } from 'next/font/google'
+import { JetBrains_Mono, Inter, Libre_Baskerville } from 'next/font/google'
 import './globals.css'
 import { ClerkProvider } from '@clerk/nextjs'
 import { ThemeProvider } from '@/components/providers/theme-provider'
@@ -17,6 +17,13 @@ const jetbrainsMono = JetBrains_Mono({
   subsets: ['latin'],
 })
 
+const libreBaskerville = Libre_Baskerville({
+  variable: '--font-serif',
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  style: ['normal', 'italic'],
+})
+
 export const metadata: Metadata = {
   title: 'listan',
   description: 'The shopping list that works. Simple. Shared. Done.',
@@ -30,7 +37,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${inter.variable} ${jetbrainsMono.variable} font-sans antialiased`}
+        className={`${inter.variable} ${jetbrainsMono.variable} ${libreBaskerville.variable} font-sans antialiased`}
       >
         <ThemeProvider
           attribute="class"

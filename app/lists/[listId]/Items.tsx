@@ -42,14 +42,14 @@ export default function Items({ preloadedList, clerkId, listId }: ItemsProps) {
 
   if (list.items.length === 0) {
     return (
-      <div className="flex flex-col">
-        <h2 className="text-2xl font-medium tracking-tight">
+      <div className="flex flex-col max-w-2xl mx-auto">
+        <h2 className="font-serif text-3xl italic text-foreground/80">
           {list.name}
         </h2>
-        <p className="text-muted-foreground mt-1 font-mono text-xs">
+        <p className="text-muted-foreground mt-2 text-sm">
           Add your first item to get started.
         </p>
-        <div className="mt-6">
+        <div className="mt-8">
           <ItemInput clerkId={clerkId} listId={listId} />
         </div>
       </div>
@@ -57,37 +57,33 @@ export default function Items({ preloadedList, clerkId, listId }: ItemsProps) {
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-8 max-w-2xl mx-auto">
       {/* List header */}
-      <div>
-        <h1 className="text-2xl font-medium tracking-tight">{list.name}</h1>
-        <div className="text-muted-foreground mt-1 flex items-center gap-4 font-mono text-xs">
-          <span>{pendingCount} pending</span>
-          <span className="text-muted-foreground/50">•</span>
-          <span>{completedCount} completed</span>
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="font-serif text-3xl italic text-foreground/80">{list.name}</h1>
+          <div className="text-muted-foreground mt-2 flex items-center gap-4 text-sm">
+            <span>{pendingCount} pending</span>
+            <span className="text-muted-foreground/30">•</span>
+            <span>{completedCount} completed</span>
+          </div>
         </div>
+        <Button
+          onClick={handleClearCompleted}
+          disabled={isClearing || completedCount === 0}
+          variant="ghost"
+          size="sm"
+          className="text-muted-foreground hover:text-foreground text-xs"
+        >
+          clear completed
+        </Button>
       </div>
 
       {/* Item input */}
       <ItemInput clerkId={clerkId} listId={listId} />
 
-      {/* Clear completed button */}
-      {completedCount > 0 && (
-        <div className="flex justify-end">
-          <Button
-            onClick={handleClearCompleted}
-            disabled={isClearing}
-            variant="ghost"
-            size="sm"
-            className="font-mono text-xs tracking-wide"
-          >
-            clear completed ({completedCount})
-          </Button>
-        </div>
-      )}
-
       {/* Items list */}
-      <ul>
+      <ul className="flex flex-col gap-3">
         {list.items.map((item) => (
           <ItemCard
             key={item._id}

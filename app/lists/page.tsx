@@ -22,13 +22,12 @@ export default async function Page() {
   }
 
   return (
-    <div className="min-h-screen">
-      {/* Subtle grid background */}
-      <div className="pointer-events-none fixed inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-size-[64px_64px]" />
-      
-      <main className="relative mx-auto max-w-2xl px-6 py-8">
+    <div className="flex min-h-screen flex-col font-sans">
+      <main className="mx-auto w-full max-w-5xl px-6 md:px-12">
         <Header clerkId={userId} />
-        <Lists preloadedLists={data} clerkId={userId} />
+        <div className="pb-20">
+          <Lists preloadedLists={data} clerkId={userId} />
+        </div>
       </main>
     </div>
   )

@@ -41,9 +41,9 @@ export default function ItemInput({ clerkId, listId }: ItemInputProps) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="border-border bg-muted/50 flex items-center gap-3 border px-4 py-3"
+      className="group flex items-center gap-3 rounded-2xl border border-border/40 bg-card p-4 transition-colors hover:border-border focus-within:border-border"
     >
-      <Plus className="text-muted-foreground h-4 w-4 shrink-0" />
+      <Plus className="text-muted-foreground h-5 w-5 shrink-0" />
       <input
         type="text"
         name="content"
@@ -61,10 +61,10 @@ export default function ItemInput({ clerkId, listId }: ItemInputProps) {
       <Button
         type="submit"
         size="sm"
-        className="font-mono text-xs"
+        className="h-8 px-3 text-xs"
         disabled={!content.trim() || isSubmitting}
       >
-        add
+        Add
       </Button>
     </form>
   )

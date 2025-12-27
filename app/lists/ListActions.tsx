@@ -202,31 +202,31 @@ export default function ListActions({ listId, clerkId }: ListActionsProps) {
             </DialogDescription>
           </DialogHeader>
           <div className="mt-4 overflow-hidden">
-            <div className="border-border flex items-center gap-2 border p-3">
-              <code className="text-muted-foreground block w-0 flex-1 overflow-hidden text-ellipsis whitespace-nowrap font-mono text-xs">
+            <div className="flex items-center gap-2 rounded-lg border border-border/40 bg-muted/30 p-2">
+              <code className="text-muted-foreground block w-0 flex-1 overflow-hidden text-ellipsis whitespace-nowrap px-2 font-mono text-xs">
                 {getShareLink()}
               </code>
               <Button
                 type="button"
                 size="sm"
                 variant="ghost"
-                className="shrink-0 font-mono text-xs"
+                className="shrink-0 h-8"
                 onClick={handleCopyLink}
               >
                 {copied ? (
                   <>
                     <Check className="mr-1 h-3 w-3" />
-                    copied
+                    Copied
                   </>
                 ) : (
-                  'copy'
+                  'Copy'
                 )}
               </Button>
             </div>
             {typeof navigator !== 'undefined' && navigator.share && (
               <Button
                 type="button"
-                className="mt-3 w-full font-mono text-xs"
+                className="mt-3 w-full"
                 onClick={async () => {
                   try {
                     await navigator.share({
@@ -241,7 +241,7 @@ export default function ListActions({ listId, clerkId }: ListActionsProps) {
                 }}
               >
                 <Share className="mr-2 h-3 w-3" />
-                share
+                Share
               </Button>
             )}
           </div>
@@ -264,18 +264,18 @@ export default function ListActions({ listId, clerkId }: ListActionsProps) {
                 value={listName}
                 onChange={(e) => setListName(e.target.value)}
                 placeholder="List name..."
-                className="border-border bg-transparent placeholder:text-muted-foreground w-full border-b py-2 font-mono text-sm outline-none transition-colors focus:border-foreground"
+                className="w-full rounded-lg border border-border/40 bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus:border-border focus:outline-none"
                 autoFocus
               />
             </div>
             <DialogFooter className="mt-6">
               <DialogClose asChild>
-                <Button type="button" variant="ghost" size="sm" className="font-mono text-xs">
-                  cancel
+                <Button type="button" variant="ghost" size="sm">
+                  Cancel
                 </Button>
               </DialogClose>
-              <Button type="submit" size="sm" className="font-mono text-xs">
-                save
+              <Button type="submit" size="sm">
+                Save
               </Button>
             </DialogFooter>
           </form>
@@ -304,22 +304,21 @@ export default function ListActions({ listId, clerkId }: ListActionsProps) {
             </DialogHeader>
             <DialogFooter className="mt-6">
               <DialogClose asChild>
-                <Button type="button" variant="ghost" size="sm" className="font-mono text-xs">
-                  cancel
+                <Button type="button" variant="ghost" size="sm">
+                  Cancel
                 </Button>
               </DialogClose>
               <Button
                 type="submit"
                 variant="destructive"
                 size="sm"
-                className="font-mono text-xs"
                 disabled={isOwner === undefined}
               >
                 {isOwner === undefined
-                  ? 'loading...'
+                  ? 'Loading...'
                   : isOwner
-                    ? 'delete'
-                    : 'leave'}
+                    ? 'Delete'
+                    : 'Leave'}
               </Button>
             </DialogFooter>
           </form>
