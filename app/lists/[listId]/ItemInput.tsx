@@ -6,9 +6,10 @@ import { Id } from '@/convex/_generated/dataModel'
 import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
 import { useState, FormEvent } from 'react'
+import type { ClerkIdProps } from '@/types'
 
-interface ItemInputProps {
-  clerkId: string
+interface ItemInputProps extends ClerkIdProps {
+  /** The unique identifier of the list */
   listId: string
 }
 

@@ -1,15 +1,13 @@
 'use client'
 
-import { api } from '@/convex/_generated/api'
-import { Preloaded, usePreloadedQuery } from 'convex/react'
+import { usePreloadedQuery } from 'convex/react'
 import ListCard from '@/components/ListCard'
 import * as motion from 'motion/react-client'
+import type { PreloadedLists, ClerkIdProps } from '@/types'
 
-interface ListsProps {
+interface ListsProps extends ClerkIdProps {
   /** Preloaded query data for the user's lists */
-  preloadedLists: Preloaded<typeof api.lists.getListsByUser>
-  /** The Clerk user ID of the current user */
-  clerkId: string
+  preloadedLists: PreloadedLists
 }
 
 /**

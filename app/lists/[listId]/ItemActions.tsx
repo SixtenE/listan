@@ -23,11 +23,12 @@ import {
 import { useMutation } from 'convex/react'
 import { api } from '@/convex/_generated/api'
 import { Id } from '@/convex/_generated/dataModel'
+import type { ListProps } from '@/types'
 
-interface ItemActionsProps {
+interface ItemActionsProps extends ListProps {
+  /** The unique identifier of the item */
   itemId: Id<'items'>
-  listId: Id<'lists'>
-  clerkId: string
+  /** The initial content of the item */
   initialContent: string
 }
 
