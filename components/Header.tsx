@@ -1,16 +1,19 @@
 import { Button } from '@/components/ui/button'
-import { UserButton } from '@clerk/nextjs'
-import AddListDialog from '@/components/AddListDialog'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
+import HeaderClient from './HeaderClient'
+import type { ClerkIdProps, NavigationProps } from '@/types'
 
-interface HeaderProps {
-  clerkId: string
-  showBackButton?: boolean
+interface HeaderProps extends ClerkIdProps, NavigationProps {
+  /** Optional href for the back button */
   backHref?: string
-  showAddListButton?: boolean
 }
 
+/**
+ * Server Component header that handles navigation structure.
+ * Delegates client-side interactivity to HeaderClient component.
+ * This separation optimizes bundle size by keeping server components lightweight.
+ */
 export default function Header({
   clerkId,
   showBackButton = false,
@@ -27,7 +30,7 @@ export default function Header({
             size="sm"
             className="text-muted-foreground hover:text-foreground -ml-3"
           >
-            <Link href={backHref}>
+            <Link href={backHref} prefetch>
               <ArrowLeft className="mr-1 h-4 w-4" />
               Back
             </Link>
@@ -36,6 +39,7 @@ export default function Header({
           <Link
             href="/lists"
             className="font-mono text-lg font-medium tracking-tight"
+            prefetch
           >
             listan
           </Link>
@@ -43,13 +47,9 @@ export default function Header({
       </div>
 
       <div className="flex items-center gap-4">
-        {showAddListButton && <AddListDialog clerkId={clerkId} />}
-        <UserButton
-          appearance={{
-            elements: {
-              avatarBox: 'h-8 w-8',
-            },
-          }}
+        <HeaderClient
+          clerkId={clerkId}
+          showAddListButton={showAddListButton}
         />
       </div>
     </header>

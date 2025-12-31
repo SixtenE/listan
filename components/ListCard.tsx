@@ -3,17 +3,13 @@
 import Link from 'next/link'
 import ListActions from '@/app/lists/ListActions'
 import { formatDistanceToNow } from 'date-fns'
-import { Id } from '@/convex/_generated/dataModel'
+import type { ListProps } from '@/types'
 
-interface ListCardProps {
-  /** The unique identifier of the list */
-  listId: Id<'lists'>
+interface ListCardProps extends ListProps {
   /** The display name of the list */
   name: string
   /** Timestamp of when the list was last updated (in milliseconds) */
   updatedAt: number
-  /** The Clerk user ID of the current user */
-  clerkId: string
 }
 
 /**
@@ -34,6 +30,7 @@ export default function ListCard({
   return (
     <Link
       href={`/lists/${listId}`}
+      prefetch
       className="group border-border/40 from-card to-secondary hover:border-border relative flex flex-col rounded-2xl border bg-linear-to-bl p-6 transition-colors sm:p-8"
     >
       <div className="mb-8 flex items-start justify-between">

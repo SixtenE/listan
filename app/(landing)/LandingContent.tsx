@@ -1,32 +1,20 @@
 'use client'
 
-import Link from 'next/link'
 import * as motion from 'motion/react-client'
-import { RefreshCcw, Users, ArrowRight } from 'lucide-react'
+import { RefreshCcw, Users } from 'lucide-react'
+import { LandingNav } from './LandingNav'
+import { LandingFooter } from './LandingFooter'
 
+/**
+ * Client Component for landing page content with animations.
+ * Only the interactive/animated parts are client-side to optimize bundle size.
+ * Navigation and footer are extracted as Server Components.
+ */
 export function LandingContent() {
   return (
     <div className="relative flex min-h-screen flex-col font-sans">
-      {/* Navbar */}
-      <nav className="flex items-center justify-between px-6 py-6 md:px-12">
-        <Link href="/" className="font-mono text-lg font-medium tracking-tight">
-          listan
-        </Link>
-        <div className="flex items-center gap-4 text-sm md:gap-6">
-          <Link
-            href="/sign-in"
-            className="text-muted-foreground hover:text-foreground transition-colors"
-          >
-            Sign in
-          </Link>
-          <Link
-            href="/lists"
-            className="text-foreground transition-opacity hover:opacity-70"
-          >
-            Get started <ArrowRight className="ml-1 inline-block h-3 w-3" />
-          </Link>
-        </div>
-      </nav>
+      {/* Navbar - Server Component */}
+      <LandingNav />
 
       {/* Main Content */}
       <main className="flex-1 px-6 pt-16 pb-20 md:px-12 md:pt-24">
@@ -89,12 +77,8 @@ export function LandingContent() {
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="px-6 py-12 text-center md:px-12">
-        <p className="text-muted-foreground font-serif text-sm italic">
-          Designed & built by Sixten
-        </p>
-      </footer>
+      {/* Footer - Server Component */}
+      <LandingFooter />
     </div>
   )
 }

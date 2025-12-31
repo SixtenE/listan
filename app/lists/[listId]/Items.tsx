@@ -1,16 +1,17 @@
 'use client'
 
 import { api } from '@/convex/_generated/api'
-import { Preloaded, usePreloadedQuery } from 'convex/react'
+import { usePreloadedQuery, useMutation } from 'convex/react'
 import ItemCard from '@/components/ItemCard'
 import { Button } from '@/components/ui/button'
-import { useMutation } from 'convex/react'
 import { useState } from 'react'
 import ItemInput from './ItemInput'
+import type { PreloadedList, ClerkIdProps } from '@/types'
 
-interface ItemsProps {
-  preloadedList: Preloaded<typeof api.lists.getListById>
-  clerkId: string
+interface ItemsProps extends ClerkIdProps {
+  /** Preloaded query data for the list */
+  preloadedList: PreloadedList
+  /** The unique identifier of the list */
   listId: string
 }
 

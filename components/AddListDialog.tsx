@@ -14,11 +14,9 @@ import { api } from '@/convex/_generated/api'
 import { useMutation } from 'convex/react'
 import { Plus } from 'lucide-react'
 import { FormEvent, useState } from 'react'
+import type { ClerkIdProps } from '@/types'
 
-interface AddListDialogProps {
-  /** The Clerk user ID of the current user */
-  clerkId: string
-}
+interface AddListDialogProps extends ClerkIdProps {}
 
 /**
  * A dialog component that allows users to create a new list.

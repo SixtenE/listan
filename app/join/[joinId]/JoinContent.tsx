@@ -3,27 +3,48 @@
 import { Button } from '@/components/ui/button'
 import { api } from '@/convex/_generated/api'
 import { Id } from '@/convex/_generated/dataModel'
-import { useMutation, useQuery } from 'convex/react'
+import { usePreloadedQuery, useQuery, useMutation } from 'convex/react'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import * as motion from 'motion/react-client'
 import { Check, X, Loader2 } from 'lucide-react'
 import Link from 'next/link'
+import type { PreloadedList, ClerkIdProps } from '@/types'
 
-interface JoinContentProps {
+interface JoinContentProps extends ClerkIdProps {
+  /** The unique identifier of the list to join */
   listId: string
-  clerkId: string
+  /** Preloaded list data (optional, falls back to useQuery if not provided) */
+  preloadedList?: PreloadedList | null
 }
 
-export default function JoinContent({ listId, clerkId }: JoinContentProps) {
+/**
+ * Client Component for joining a list.
+ * Uses preloaded query data when available for instant rendering,
+ * falls back to useQuery if preload failed or wasn't available.
+ */
+export default function JoinContent({ 
+  listId, 
+  clerkId,
+  preloadedList 
+}: JoinContentProps) {
   const router = useRouter()
   const [isJoining, setIsJoining] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
 
-  const list = useQuery(api.lists.getListById, {
-    listId: listId as Id<'lists'>,
-  })
+  // Use preloaded query if available, otherwise fall back to regular query
+  // Always call hooks unconditionally (React rules)
+  const preloadedData = preloadedList ? usePreloadedQuery(preloadedList) : null
+  // Always call useQuery but it will be skipped if preloadedList exists
+  // Convex useQuery returns undefined when args are undefined
+  const queriedData = useQuery(
+    api.lists.getListById,
+    preloadedList ? undefined : { listId: listId as Id<'lists'> }
+  )
+  
+  // Prefer preloaded data, fall back to query result
+  const list = preloadedData ?? queriedData
 
   const joinList = useMutation(api.lists.joinList)
 
@@ -75,15 +96,15 @@ export default function JoinContent({ listId, clerkId }: JoinContentProps) {
             This invite link is invalid or the list has been deleted.
           </p>
           <Button asChild className="mt-6 font-mono text-xs" size="sm">
-            <Link href="/lists">go to your lists</Link>
+            <Link href="/lists" prefetch>go to your lists</Link>
           </Button>
         </motion.div>
       </div>
     )
   }
 
-  // Loading state
-  if (list === undefined) {
+  // Loading state (only shown if not using preloaded query)
+  if (list === undefined && !preloadedList) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center px-6">
         <motion.div
@@ -130,6 +151,7 @@ export default function JoinContent({ listId, clerkId }: JoinContentProps) {
         <Link
           href="/lists"
           className="font-mono text-sm tracking-wider transition-opacity hover:opacity-70"
+          prefetch
         >
           listan
         </Link>
@@ -185,7 +207,7 @@ export default function JoinContent({ listId, clerkId }: JoinContentProps) {
               variant="ghost"
               className="font-mono text-sm"
             >
-              <Link href="/lists">cancel</Link>
+              <Link href="/lists" prefetch>cancel</Link>
             </Button>
           </div>
         </motion.div>

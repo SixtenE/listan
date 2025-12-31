@@ -7,14 +7,15 @@ import { api } from '@/convex/_generated/api'
 import { Check } from 'lucide-react'
 import { useState, useEffect, useRef } from 'react'
 import { cn } from '@/lib/utils'
+import type { ListProps, BaseComponentProps } from '@/types'
 
-interface ItemCardProps {
+interface ItemCardProps extends ListProps, BaseComponentProps {
+  /** The unique identifier of the item */
   itemId: Id<'items'>
+  /** The content/text of the item */
   content: string
+  /** Whether the item is completed */
   completed: boolean
-  listId: Id<'lists'>
-  clerkId: string
-  className?: string
 }
 
 export default function ItemCard({

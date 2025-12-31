@@ -24,12 +24,11 @@ import {
 import { useQuery, useMutation } from 'convex/react'
 import { api } from '@/convex/_generated/api'
 import { Id } from '@/convex/_generated/dataModel'
+import type { ClerkIdProps } from '@/types'
 
-interface ListActionsProps {
+interface ListActionsProps extends ClerkIdProps {
   /** The unique identifier of the list */
   listId: string
-  /** The Clerk user ID of the current user */
-  clerkId: string
 }
 
 /**
