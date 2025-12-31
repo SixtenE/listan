@@ -36,11 +36,11 @@ export default function JoinContent({
   // Use preloaded query if available, otherwise fall back to regular query
   // Always call hooks unconditionally (React rules)
   const preloadedData = preloadedList ? usePreloadedQuery(preloadedList) : null
-  // Always call useQuery but it will be skipped if preloadedList exists
-  // Convex useQuery returns undefined when args are undefined
+  // Always call useQuery with proper args (required by React hooks rules)
+  // When preloadedList exists, we'll ignore the query result
   const queriedData = useQuery(
     api.lists.getListById,
-    preloadedList ? undefined : { listId: listId as Id<'lists'> }
+    { listId: listId as Id<'lists'> }
   )
   
   // Prefer preloaded data, fall back to query result
