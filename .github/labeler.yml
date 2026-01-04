@@ -1,0 +1,50 @@
+# Configuration for PR Labeler
+# Labels PRs based on the files changed
+
+app:
+  - changed-files:
+      - any-glob-to-any-file: "app/**/*"
+
+components:
+  - changed-files:
+      - any-glob-to-any-file: "components/**/*"
+
+convex:
+  - changed-files:
+      - any-glob-to-any-file: "convex/**/*"
+
+ui:
+  - changed-files:
+      - any-glob-to-any-file: "components/ui/**/*"
+
+styling:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.css"
+          - "postcss.config.mjs"
+          - "tailwind.config.*"
+
+documentation:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.md"
+          - "docs/**/*"
+
+configuration:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "*.config.*"
+          - "*.json"
+          - ".eslintrc*"
+          - ".prettier*"
+          - "tsconfig.json"
+
+ci:
+  - changed-files:
+      - any-glob-to-any-file: ".github/**/*"
+
+auth:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "app/(auth)/**/*"
+          - "convex/auth*"
