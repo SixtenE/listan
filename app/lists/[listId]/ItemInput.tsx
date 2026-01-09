@@ -50,7 +50,7 @@ export default function ItemInput({ clerkId, listId }: ItemInputProps) {
         value={content}
         onChange={(e) => setContent(e.target.value)}
         placeholder="Add an item..."
-        className="bg-transparent placeholder:text-muted-foreground flex-1 text-sm outline-none"
+        className="bg-transparent placeholder:text-muted-foreground flex-1 text-base md:text-sm outline-none"
         onKeyDown={(e) => {
           if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault()
