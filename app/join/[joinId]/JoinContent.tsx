@@ -113,7 +113,7 @@ export default function JoinContent({ listId, clerkId }: JoinContentProps) {
           </div>
           <h1 className="text-2xl font-medium tracking-tight">Joined!</h1>
           <p className="text-muted-foreground mt-2 font-mono text-sm">
-            Redirecting to {list.name}...
+            Redirecting to {list?.name}...
           </p>
         </motion.div>
       </div>
