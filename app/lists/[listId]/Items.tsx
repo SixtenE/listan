@@ -6,7 +6,7 @@ import { Preloaded, usePreloadedQuery } from "convex/react";
 import ItemCard from "@/components/ItemCard";
 import { Button } from "@/components/ui/button";
 import { useMutation } from "convex/react";
-import { useState, useMemo } from "react";
+import { useState, useEffect } from "react";
 import ItemInput from "./ItemInput";
 import {
   Sortable,
@@ -36,7 +36,7 @@ export default function Items({ preloadedList, clerkId, listId }: ItemsProps) {
   const items = optimisticItems ?? list?.items ?? [];
 
   // Reset optimistic items when server items change
-  useMemo(() => {
+  useEffect(() => {
     if (list?.items) {
       setOptimisticItems(null);
     }
