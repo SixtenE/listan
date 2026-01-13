@@ -133,11 +133,7 @@ export default function ListActions({ listId, clerkId }: ListActionsProps) {
     <>
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
-          <Button
-            className="h-6 w-6"
-            size="icon-sm"
-            variant="ghost"
-          >
+          <Button className="h-6 w-6" size="icon-sm" variant="ghost">
             <MoreVertical className="h-3 w-3" />
           </Button>
         </DropdownMenuTrigger>
@@ -161,10 +157,7 @@ export default function ListActions({ listId, clerkId }: ListActionsProps) {
               </DropdownMenuGroup>
               {isOwner ? (
                 <DropdownMenuGroup>
-                  <DropdownMenuItem
-                    className="font-mono text-xs"
-                    onSelect={handleOpenEditDialog}
-                  >
+                  <DropdownMenuItem className="font-mono text-xs" onSelect={handleOpenEditDialog}>
                     edit
                     <Edit className="ml-auto h-3 w-3" />
                   </DropdownMenuItem>
@@ -197,9 +190,7 @@ export default function ListActions({ listId, clerkId }: ListActionsProps) {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Invite to list</DialogTitle>
-            <DialogDescription>
-              Share this link to invite others to your list.
-            </DialogDescription>
+            <DialogDescription>Share this link to invite others to your list.</DialogDescription>
           </DialogHeader>
           <div className="mt-4 overflow-hidden">
             <div className="flex items-center gap-2 rounded-lg border border-border/40 bg-muted/30 p-2">
@@ -231,7 +222,7 @@ export default function ListActions({ listId, clerkId }: ListActionsProps) {
                   try {
                     await navigator.share({
                       title: `Join "${list?.name}" on listan`,
-                      text: 'You\'ve been invited to collaborate on a shopping list',
+                      text: "You've been invited to collaborate on a shopping list",
                       url: getShareLink(),
                     })
                   } catch (err) {
@@ -254,9 +245,7 @@ export default function ListActions({ listId, clerkId }: ListActionsProps) {
           <form onSubmit={handleEditSubmit}>
             <DialogHeader>
               <DialogTitle>Edit list</DialogTitle>
-              <DialogDescription>
-                Update the name of this list.
-              </DialogDescription>
+              <DialogDescription>Update the name of this list.</DialogDescription>
             </DialogHeader>
             <div className="mt-6">
               <input
@@ -288,11 +277,7 @@ export default function ListActions({ listId, clerkId }: ListActionsProps) {
           <form onSubmit={handleDeleteSubmit}>
             <DialogHeader>
               <DialogTitle>
-                {isOwner === undefined
-                  ? 'Loading...'
-                  : isOwner
-                    ? 'Delete list'
-                    : 'Leave list'}
+                {isOwner === undefined ? 'Loading...' : isOwner ? 'Delete list' : 'Leave list'}
               </DialogTitle>
               <DialogDescription>
                 {isOwner === undefined
@@ -314,11 +299,7 @@ export default function ListActions({ listId, clerkId }: ListActionsProps) {
                 size="sm"
                 disabled={isOwner === undefined}
               >
-                {isOwner === undefined
-                  ? 'Loading...'
-                  : isOwner
-                    ? 'Delete'
-                    : 'Leave'}
+                {isOwner === undefined ? 'Loading...' : isOwner ? 'Delete' : 'Leave'}
               </Button>
             </DialogFooter>
           </form>

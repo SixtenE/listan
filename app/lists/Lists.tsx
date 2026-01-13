@@ -23,12 +23,10 @@ export default function Lists({ preloadedLists, clerkId }: ListsProps) {
   if (lists.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-24 text-center">
-        <h2 className="mb-4 font-serif text-2xl italic text-foreground/80">
-          No lists yet
-        </h2>
+        <h2 className="mb-4 font-serif text-2xl italic text-foreground/80">No lists yet</h2>
         <p className="text-muted-foreground max-w-sm text-sm">
-          Get started by creating a new list. You can organize your items
-          and share lists with others.
+          Get started by creating a new list. You can organize your items and share lists with
+          others.
         </p>
       </div>
     )
@@ -37,9 +35,7 @@ export default function Lists({ preloadedLists, clerkId }: ListsProps) {
   return (
     <div className="mt-12">
       <div className="mb-8 flex items-center justify-between">
-        <h2 className="font-serif text-2xl italic text-foreground/80">
-          Your Lists
-        </h2>
+        <h2 className="font-serif text-2xl italic text-foreground/80">Your Lists</h2>
         <span className="text-muted-foreground text-sm">
           {lists.length} {lists.length === 1 ? 'list' : 'lists'}
         </span>

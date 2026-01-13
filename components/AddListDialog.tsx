@@ -53,12 +53,8 @@ export default function AddListDialog({ clerkId }: AddListDialogProps) {
       <DialogContent className="max-w-md">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle>
-              Create new list
-            </DialogTitle>
-            <DialogDescription>
-              Enter a name for your new list.
-            </DialogDescription>
+            <DialogTitle>Create new list</DialogTitle>
+            <DialogDescription>Enter a name for your new list.</DialogDescription>
           </DialogHeader>
           <div className="mt-6">
             <input
@@ -72,11 +68,7 @@ export default function AddListDialog({ clerkId }: AddListDialogProps) {
             />
           </div>
           <DialogFooter className="mt-6">
-            <Button 
-              type="submit" 
-              size="sm"
-              disabled={!listName.trim()}
-            >
+            <Button type="submit" size="sm" disabled={!listName.trim()}>
               Create
             </Button>
           </DialogFooter>

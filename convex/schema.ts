@@ -18,6 +18,7 @@ export default defineSchema({
     content: v.string(),
     listId: v.id('lists'),
     completed: v.boolean(),
+    order: v.number(),
   })
     .index('by_listId', ['listId'])
     .index('by_listId_completed', ['listId', 'completed']),

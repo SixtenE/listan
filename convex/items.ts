@@ -20,10 +20,19 @@ export const createItem = mutation({
       throw new Error('You are not a member of this list.')
     }
 
+    // Get the highest order value for items in this list
+    const items = await ctx.db
+      .query('items')
+      .withIndex('by_listId', (q) => q.eq('listId', args.listId))
+      .collect()
+
+    const maxOrder = items.reduce((max, item) => Math.max(max, item.order ?? 0), 0)
+
     const id = await ctx.db.insert('items', {
       content: args.content,
       listId: args.listId,
       completed: false,
+      order: maxOrder + 1,
     })
 
     await ctx.runMutation(internal.lists.updateListTimestamp, {
@@ -141,9 +150,7 @@ export const clearCompletedItems = mutation({
   handler: async (ctx, { listId, clerkId }) => {
     const isMember = await ctx.db
       .query('members')
-      .withIndex('by_clerkId_listId', (q) =>
-        q.eq('clerkId', clerkId).eq('listId', listId),
-      )
+      .withIndex('by_clerkId_listId', (q) => q.eq('clerkId', clerkId).eq('listId', listId))
       .first()
 
     if (!isMember) {
@@ -152,9 +159,7 @@ export const clearCompletedItems = mutation({
 
     const completedItems = await ctx.db
       .query('items')
-      .withIndex('by_listId_completed', (q) =>
-        q.eq('listId', listId).eq('completed', true),
-      )
+      .withIndex('by_listId_completed', (q) => q.eq('listId', listId).eq('completed', true))
       .collect()
 
     for (const item of completedItems) {
@@ -166,5 +171,32 @@ export const clearCompletedItems = mutation({
     })
 
     return completedItems.length
+  },
+})
+
+export const reorderItems = mutation({
+  args: {
+    listId: v.id('lists'),
+    clerkId: v.string(),
+    itemIds: v.array(v.id('items')),
+  },
+  handler: async (ctx, { listId, clerkId, itemIds }) => {
+    const isMember = await ctx.db
+      .query('members')
+      .withIndex('by_clerkId_listId', (q) => q.eq('clerkId', clerkId).eq('listId', listId))
+      .first()
+
+    if (!isMember) {
+      throw new Error('You are not a member of this list.')
+    }
+
+    // Update order for each item
+    for (let i = 0; i < itemIds.length; i++) {
+      await ctx.db.patch(itemIds[i], { order: i })
+    }
+
+    await ctx.runMutation(internal.lists.updateListTimestamp, {
+      listId,
+    })
   },
 })

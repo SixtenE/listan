@@ -86,11 +86,7 @@ export default function JoinContent({ listId, clerkId }: JoinContentProps) {
   if (list === undefined) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center px-6">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="text-center"
-        >
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center">
           <Loader2 className="text-muted-foreground mx-auto h-6 w-6 animate-spin" />
           <p className="text-muted-foreground mt-4 font-mono text-xs">Loading...</p>
         </motion.div>
@@ -166,11 +162,7 @@ export default function JoinContent({ listId, clerkId }: JoinContentProps) {
           )}
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
-            <Button
-              onClick={handleJoin}
-              disabled={isJoining}
-              className="font-mono text-sm"
-            >
+            <Button onClick={handleJoin} disabled={isJoining} className="font-mono text-sm">
               {isJoining ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -180,11 +172,7 @@ export default function JoinContent({ listId, clerkId }: JoinContentProps) {
                 'join list'
               )}
             </Button>
-            <Button
-              asChild
-              variant="ghost"
-              className="font-mono text-sm"
-            >
+            <Button asChild variant="ghost" className="font-mono text-sm">
               <Link href="/lists">cancel</Link>
             </Button>
           </div>
@@ -193,4 +181,3 @@ export default function JoinContent({ listId, clerkId }: JoinContentProps) {
     </div>
   )
 }
-

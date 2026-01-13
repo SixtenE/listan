@@ -19,10 +19,7 @@ export function LandingContent() {
           >
             Sign in
           </Link>
-          <Link
-            href="/lists"
-            className="text-foreground transition-opacity hover:opacity-70"
-          >
+          <Link href="/lists" className="text-foreground transition-opacity hover:opacity-70">
             Get started <ArrowRight className="ml-1 inline-block h-3 w-3" />
           </Link>
         </div>
@@ -51,8 +48,8 @@ export function LandingContent() {
               transition={{ duration: 0.6, delay: 0.1 }}
               className="text-muted-foreground mx-auto mt-8 max-w-lg text-lg leading-relaxed"
             >
-              I built listan because I needed a shopping list that just works.
-              Simple, shared, and designed to stay out of your way.
+              I built listan because I needed a shopping list that just works. Simple, shared, and
+              designed to stay out of your way.
             </motion.p>
           </div>
 
@@ -129,9 +126,7 @@ function FeatureCard({
           {icon}
         </div>
       </div>
-      <p className="text-muted-foreground/80 mt-auto text-sm leading-relaxed">
-        {description}
-      </p>
+      <p className="text-muted-foreground/80 mt-auto text-sm leading-relaxed">{description}</p>
     </motion.div>
   )
 }

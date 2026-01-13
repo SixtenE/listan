@@ -5,26 +5,21 @@ import { Id } from '@/convex/_generated/dataModel'
 import { useMutation } from 'convex/react'
 import { api } from '@/convex/_generated/api'
 import { Check } from 'lucide-react'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, forwardRef } from 'react'
 import { cn } from '@/lib/utils'
 
-interface ItemCardProps {
+interface ItemCardProps extends React.ComponentPropsWithoutRef<'li'> {
   itemId: Id<'items'>
   content: string
   completed: boolean
   listId: Id<'lists'>
   clerkId: string
-  className?: string
 }
 
-export default function ItemCard({
-  itemId,
-  content,
-  completed,
-  listId,
-  clerkId,
-  className,
-}: ItemCardProps) {
+const ItemCard = forwardRef<HTMLLIElement, ItemCardProps>(function ItemCard(
+  { itemId, content, completed, listId, clerkId, className, ...props },
+  ref,
+) {
   const toggleCompleted = useMutation(api.items.toggleItemCompleted)
   const [optimisticCompleted, setOptimisticCompleted] = useState(completed)
   const isPendingRef = useRef(false)
@@ -37,7 +32,10 @@ export default function ItemCard({
     }
   }, [completed])
 
-  const handleToggle = async () => {
+  const handleToggle = async (e: React.MouseEvent) => {
+    // Prevent drag from starting when clicking the checkbox
+    e.stopPropagation()
+
     const newCompleted = !optimisticCompleted
 
     // Optimistic update - update UI immediately
@@ -66,43 +64,50 @@ export default function ItemCard({
 
   return (
     <li
+      ref={ref}
       className={cn(
         'group relative flex w-full items-start gap-4 rounded-xl border border-border/40 bg-card p-4 transition-all hover:border-border',
         displayCompleted && 'bg-secondary/30 border-transparent hover:border-border/40',
         className,
       )}
+      {...props}
     >
       <button
         type="button"
         onClick={handleToggle}
+        onPointerDown={(e) => e.stopPropagation()}
+        onMouseDown={(e) => e.stopPropagation()}
+        onTouchStart={(e) => e.stopPropagation()}
         className={cn(
-          'mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border transition-all',
+          'relative z-10 mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border transition-all touch-none',
           displayCompleted
             ? 'border-foreground bg-foreground text-background'
-            : 'border-muted-foreground/30 hover:border-foreground'
+            : 'border-muted-foreground/30 hover:border-foreground',
         )}
-        aria-label={
-          displayCompleted ? 'Mark as incomplete' : 'Mark as complete'
-        }
+        aria-label={displayCompleted ? 'Mark as incomplete' : 'Mark as complete'}
       >
         {displayCompleted && <Check className="h-3 w-3" />}
       </button>
       <div className="flex-1 min-w-0">
-        <p className={cn(
-          'text-sm leading-relaxed transition-opacity break-words',
-          displayCompleted ? 'text-muted-foreground line-through opacity-60' : 'text-foreground'
-        )}>
+        <p
+          className={cn(
+            'text-sm leading-relaxed transition-opacity break-words',
+            displayCompleted ? 'text-muted-foreground line-through opacity-60' : 'text-foreground',
+          )}
+        >
           {content}
         </p>
       </div>
-      <div className="opacity-0 transition-opacity group-hover:opacity-100">
-        <ItemActions
-          itemId={itemId}
-          listId={listId}
-          clerkId={clerkId}
-          initialContent={content}
-        />
+      <div
+        className="relative z-10 opacity-0 transition-opacity group-hover:opacity-100 touch-none"
+        onPointerDown={(e) => e.stopPropagation()}
+        onMouseDown={(e) => e.stopPropagation()}
+        onTouchStart={(e) => e.stopPropagation()}
+      >
+        <ItemActions itemId={itemId} listId={listId} clerkId={clerkId} initialContent={content} />
       </div>
     </li>
   )
-}
+})
+
+export default ItemCard

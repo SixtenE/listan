@@ -13,14 +13,10 @@ export const getListsByUser = query({
       .collect()
 
     const lists = await Promise.all(
-      memberships.map(
-        async (membership) => await ctx.db.get(membership.listId),
-      ),
+      memberships.map(async (membership) => await ctx.db.get(membership.listId)),
     )
 
-    return lists
-      .filter((list) => list !== null)
-      .sort((a, b) => b.updatedAt - a.updatedAt)
+    return lists.filter((list) => list !== null).sort((a, b) => b.updatedAt - a.updatedAt)
   },
 })
 
@@ -57,12 +53,17 @@ export const getListById = query({
   },
   handler: async (ctx, { listId }) => {
     const list = await ctx.db.get(listId)
+    const items = await ctx.db
+      .query('items')
+      .withIndex('by_listId', (q) => q.eq('listId', listId))
+      .collect()
+
+    // Sort items by order field
+    items.sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+
     return {
       ...list,
-      items: await ctx.db
-        .query('items')
-        .withIndex('by_listId', (q) => q.eq('listId', listId))
-        .collect(),
+      items,
     }
   },
 })
@@ -75,9 +76,7 @@ export const isListOwner = query({
   handler: async (ctx, { listId, clerkId }) => {
     const membership = await ctx.db
       .query('members')
-      .withIndex('by_clerkId_listId', (q) =>
-        q.eq('clerkId', clerkId).eq('listId', listId),
-      )
+      .withIndex('by_clerkId_listId', (q) => q.eq('clerkId', clerkId).eq('listId', listId))
       .first()
 
     return membership?.role === 'owner'
@@ -112,9 +111,7 @@ export const deleteList = mutation({
   handler: async (ctx, { listId, clerkId }) => {
     const isOwner = await ctx.db
       .query('members')
-      .withIndex('by_listId_role', (q) =>
-        q.eq('listId', listId).eq('role', 'owner'),
-      )
+      .withIndex('by_listId_role', (q) => q.eq('listId', listId).eq('role', 'owner'))
       .first()
 
     if (!isOwner || isOwner.clerkId !== clerkId) {
@@ -154,9 +151,7 @@ export const joinList = mutation({
   handler: async (ctx, { listId, clerkId }) => {
     const existingMembership = await ctx.db
       .query('members')
-      .withIndex('by_clerkId_listId', (q) =>
-        q.eq('clerkId', clerkId).eq('listId', listId),
-      )
+      .withIndex('by_clerkId_listId', (q) => q.eq('clerkId', clerkId).eq('listId', listId))
       .first()
 
     if (existingMembership) {
@@ -179,9 +174,7 @@ export const leaveList = mutation({
   handler: async (ctx, { listId, clerkId }) => {
     const membership = await ctx.db
       .query('members')
-      .withIndex('by_clerkId_listId', (q) =>
-        q.eq('clerkId', clerkId).eq('listId', listId),
-      )
+      .withIndex('by_clerkId_listId', (q) => q.eq('clerkId', clerkId).eq('listId', listId))
       .first()
 
     if (!membership) {

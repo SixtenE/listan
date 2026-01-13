@@ -2,11 +2,7 @@ import { auth } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 import JoinContent from './JoinContent'
 
-export default async function Page({
-  params,
-}: {
-  params: Promise<{ joinId: string }>
-}) {
+export default async function Page({ params }: { params: Promise<{ joinId: string }> }) {
   const { joinId } = await params
   const { userId } = await auth()
 

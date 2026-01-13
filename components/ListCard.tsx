@@ -20,12 +20,7 @@ interface ListCardProps {
  * A card component that displays a list with its name, last updated time,
  * and actions menu. Clicking the card navigates to the list detail page.
  */
-export default function ListCard({
-  listId,
-  name,
-  updatedAt,
-  clerkId,
-}: ListCardProps) {
+export default function ListCard({ listId, name, updatedAt, clerkId }: ListCardProps) {
   const handleActionsClick = (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
@@ -38,9 +33,7 @@ export default function ListCard({
     >
       <div className="mb-8 flex items-start justify-between">
         <div>
-          <h3 className="font-medium text-foreground">
-            {name}
-          </h3>
+          <h3 className="font-medium text-foreground">{name}</h3>
           <p className="mt-1 text-xs text-muted-foreground">Shopping List</p>
         </div>
         <div className="flex items-center gap-2">
@@ -50,7 +43,7 @@ export default function ListCard({
           </div>
         </div>
       </div>
-      
+
       <div className="mt-auto">
         <p className="text-sm leading-relaxed text-muted-foreground/80">
           Updated {formatDistanceToNow(new Date(updatedAt), { addSuffix: true })}

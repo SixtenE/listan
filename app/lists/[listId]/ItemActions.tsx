@@ -31,12 +31,7 @@ interface ItemActionsProps {
   initialContent: string
 }
 
-export default function ItemActions({
-  itemId,
-  listId,
-  clerkId,
-  initialContent,
-}: ItemActionsProps) {
+export default function ItemActions({ itemId, listId, clerkId, initialContent }: ItemActionsProps) {
   // listId is kept for future use (e.g., for permission checks)
   void listId
 
@@ -114,9 +109,7 @@ export default function ItemActions({
           <form onSubmit={handleEditSubmit}>
             <DialogHeader>
               <DialogTitle>Edit item</DialogTitle>
-              <DialogDescription>
-                Update the content of this item.
-              </DialogDescription>
+              <DialogDescription>Update the content of this item.</DialogDescription>
             </DialogHeader>
             <div className="mt-6">
               <textarea

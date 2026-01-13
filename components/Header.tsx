@@ -33,10 +33,7 @@ export default function Header({
             </Link>
           </Button>
         ) : (
-          <Link
-            href="/lists"
-            className="font-mono text-lg font-medium tracking-tight"
-          >
+          <Link href="/lists" className="font-mono text-lg font-medium tracking-tight">
             listan
           </Link>
         )}
