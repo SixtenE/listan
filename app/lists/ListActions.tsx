@@ -1,10 +1,18 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { Edit, LogOut, MoreVertical, Trash, Link2, Check, Share } from 'lucide-react'
-import { useRouter } from 'next/navigation'
+import { useState } from "react";
+import {
+  Edit,
+  LogOut,
+  MoreVertical,
+  Trash,
+  Link2,
+  Check,
+  Share,
+} from "lucide-react";
+import { useRouter } from "next/navigation";
 
-import { Button } from '@/components/ui/button'
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -13,23 +21,23 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog'
+} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { useQuery, useMutation } from 'convex/react'
-import { api } from '@/convex/_generated/api'
-import { Id } from '@/convex/_generated/dataModel'
+} from "@/components/ui/dropdown-menu";
+import { useQuery, useMutation } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { Id } from "@/convex/_generated/dataModel";
 
 interface ListActionsProps {
   /** The unique identifier of the list */
-  listId: string
+  listId: string;
   /** The Clerk user ID of the current user */
-  clerkId: string
+  clerkId: string;
 }
 
 /**
@@ -37,95 +45,89 @@ interface ListActionsProps {
  * Shows edit and delete options for owners, or leave option for members.
  */
 export default function ListActions({ listId, clerkId }: ListActionsProps) {
-  const router = useRouter()
-  const [showEditDialog, setShowEditDialog] = useState(false)
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
-  const [showShareDialog, setShowShareDialog] = useState(false)
-  const [listName, setListName] = useState('')
-  const [copied, setCopied] = useState(false)
+  const router = useRouter();
+  const [showEditDialog, setShowEditDialog] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [showShareDialog, setShowShareDialog] = useState(false);
+  const [listName, setListName] = useState("");
+  const [copied, setCopied] = useState(false);
 
   const isOwner = useQuery(api.lists.isListOwner, {
-    listId: listId as Id<'lists'>,
+    listId: listId as Id<"lists">,
     clerkId,
-  })
+  });
 
   const list = useQuery(api.lists.getListById, {
-    listId: listId as Id<'lists'>,
-  })
+    listId: listId as Id<"lists">,
+  });
 
-  const renameList = useMutation(api.lists.renameList)
-  const deleteList = useMutation(api.lists.deleteList)
-  const leaveList = useMutation(api.lists.leaveList)
+  const renameList = useMutation(api.lists.renameList);
+  const deleteList = useMutation(api.lists.deleteList);
+  const leaveList = useMutation(api.lists.leaveList);
 
   const handleOpenEditDialog = () => {
-    setListName(list?.name ?? '')
-    setShowEditDialog(true)
-  }
+    setListName(list?.name ?? "");
+    setShowEditDialog(true);
+  };
 
   const handleCloseEditDialog = (open: boolean) => {
-    setShowEditDialog(open)
+    setShowEditDialog(open);
     if (!open) {
-      setListName(list?.name ?? '')
+      setListName(list?.name ?? "");
     }
-  }
+  };
 
   const getShareLink = () => {
-    if (typeof window !== 'undefined') {
-      return `${window.location.origin}/join/${listId}`
+    if (typeof window !== "undefined") {
+      return `${window.location.origin}/join/${listId}`;
     }
-    return ''
-  }
+    return "";
+  };
 
   const handleCopyLink = async () => {
-    const link = getShareLink()
+    const link = getShareLink();
     try {
-      await navigator.clipboard.writeText(link)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
+      await navigator.clipboard.writeText(link);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
     } catch (error) {
-      console.error('Failed to copy link:', error)
+      console.error("Failed to copy link:", error);
     }
-  }
+  };
 
-  async function handleEditSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    const formData = new FormData(event.currentTarget)
-    const newName = formData.get('name') as string
-
-    if (newName.trim() && newName !== list?.name) {
+  async function handleEdit() {
+    if (listName.trim() && listName !== list?.name) {
       await renameList({
-        listId: listId as Id<'lists'>,
-        newName: newName.trim(),
+        listId: listId as Id<"lists">,
+        newName: listName.trim(),
         clerkId,
-      })
+      });
     }
-    setShowEditDialog(false)
+    setShowEditDialog(false);
   }
 
-  async function handleDeleteSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-
+  async function handleDelete() {
     // Don't proceed if ownership status is still loading
     if (isOwner === undefined) {
-      return
+      return;
     }
 
     try {
       if (isOwner) {
         await deleteList({
-          listId: listId as Id<'lists'>,
+          listId: listId as Id<"lists">,
           clerkId,
-        })
+        });
       } else {
         await leaveList({
-          listId: listId as Id<'lists'>,
+          listId: listId as Id<"lists">,
           clerkId,
-        })
+        });
       }
-      setShowDeleteDialog(false)
-      router.push('/lists')
+      setShowDeleteDialog(false);
+      router.push("/lists");
     } catch (error) {
-      console.error('Failed to delete/leave list:', error)
+      console.error("Failed to delete/leave list:", error);
     }
   }
 
@@ -138,14 +140,13 @@ export default function ListActions({ listId, clerkId }: ListActionsProps) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="border-border w-32 border" align="end">
-          {isOwner === undefined ? (
+          {isOwner === undefined ?
             <DropdownMenuGroup>
               <DropdownMenuItem disabled className="font-mono text-xs">
                 Loading...
               </DropdownMenuItem>
             </DropdownMenuGroup>
-          ) : (
-            <>
+          : <>
               <DropdownMenuGroup>
                 <DropdownMenuItem
                   className="font-mono text-xs"
@@ -155,9 +156,12 @@ export default function ListActions({ listId, clerkId }: ListActionsProps) {
                   <Link2 className="ml-auto h-3 w-3" />
                 </DropdownMenuItem>
               </DropdownMenuGroup>
-              {isOwner ? (
+              {isOwner ?
                 <DropdownMenuGroup>
-                  <DropdownMenuItem className="font-mono text-xs" onSelect={handleOpenEditDialog}>
+                  <DropdownMenuItem
+                    className="font-mono text-xs"
+                    onSelect={handleOpenEditDialog}
+                  >
                     edit
                     <Edit className="ml-auto h-3 w-3" />
                   </DropdownMenuItem>
@@ -169,8 +173,7 @@ export default function ListActions({ listId, clerkId }: ListActionsProps) {
                     <Trash className="stroke-destructive ml-auto h-3 w-3" />
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
-              ) : (
-                <DropdownMenuGroup>
+              : <DropdownMenuGroup>
                   <DropdownMenuItem
                     onSelect={() => setShowDeleteDialog(true)}
                     className="text-destructive font-mono text-xs"
@@ -179,9 +182,9 @@ export default function ListActions({ listId, clerkId }: ListActionsProps) {
                     <LogOut className="stroke-destructive ml-auto h-3 w-3" />
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
-              )}
+              }
             </>
-          )}
+          }
         </DropdownMenuContent>
       </DropdownMenu>
 
@@ -190,7 +193,9 @@ export default function ListActions({ listId, clerkId }: ListActionsProps) {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Invite to list</DialogTitle>
-            <DialogDescription>Share this link to invite others to your list.</DialogDescription>
+            <DialogDescription>
+              Share this link to invite others to your list.
+            </DialogDescription>
           </DialogHeader>
           <div className="mt-4 overflow-hidden">
             <div className="flex items-center gap-2 rounded-lg border border-border/40 bg-muted/30 p-2">
@@ -204,17 +209,15 @@ export default function ListActions({ listId, clerkId }: ListActionsProps) {
                 className="shrink-0 h-8"
                 onClick={handleCopyLink}
               >
-                {copied ? (
+                {copied ?
                   <>
                     <Check className="mr-1 h-3 w-3" />
                     Copied
                   </>
-                ) : (
-                  'Copy'
-                )}
+                : "Copy"}
               </Button>
             </div>
-            {typeof navigator !== 'undefined' && navigator.share && (
+            {typeof navigator !== "undefined" && navigator.share && (
               <Button
                 type="button"
                 className="mt-3 w-full"
@@ -224,10 +227,10 @@ export default function ListActions({ listId, clerkId }: ListActionsProps) {
                       title: `Join "${list?.name}" on listan`,
                       text: "You've been invited to collaborate on a shopping list",
                       url: getShareLink(),
-                    })
+                    });
                   } catch (err) {
                     // User cancelled or share failed
-                    console.log('Share cancelled or failed:', err)
+                    console.log("Share cancelled or failed:", err);
                   }
                 }}
               >
@@ -242,69 +245,73 @@ export default function ListActions({ listId, clerkId }: ListActionsProps) {
       {/* Edit Dialog */}
       <Dialog open={showEditDialog} onOpenChange={handleCloseEditDialog}>
         <DialogContent>
-          <form onSubmit={handleEditSubmit}>
-            <DialogHeader>
-              <DialogTitle>Edit list</DialogTitle>
-              <DialogDescription>Update the name of this list.</DialogDescription>
-            </DialogHeader>
-            <div className="mt-6">
-              <input
-                name="name"
-                value={listName}
-                onChange={(e) => setListName(e.target.value)}
-                placeholder="List name..."
-                className="w-full rounded-lg border border-border/40 bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus:border-border focus:outline-none"
-                autoFocus
-              />
-            </div>
-            <DialogFooter className="mt-6">
-              <DialogClose asChild>
-                <Button type="button" variant="ghost" size="sm">
-                  Cancel
-                </Button>
-              </DialogClose>
-              <Button type="submit" size="sm">
-                Save
+          <DialogHeader>
+            <DialogTitle>Edit list</DialogTitle>
+            <DialogDescription>Update the name of this list.</DialogDescription>
+          </DialogHeader>
+          <div className="mt-6">
+            <input
+              value={listName}
+              onChange={(e) => setListName(e.target.value)}
+              placeholder="List name..."
+              className="w-full rounded-lg border border-border/40 bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus:border-border focus:outline-none"
+              autoFocus
+            />
+          </div>
+          <DialogFooter className="mt-6">
+            <DialogClose asChild>
+              <Button type="button" variant="ghost" size="sm">
+                Cancel
               </Button>
-            </DialogFooter>
-          </form>
+            </DialogClose>
+            <Button type="button" size="sm" onClick={handleEdit}>
+              Save
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
 
       {/* Delete/Leave Dialog */}
       <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <DialogContent>
-          <form onSubmit={handleDeleteSubmit}>
-            <DialogHeader>
-              <DialogTitle>
-                {isOwner === undefined ? 'Loading...' : isOwner ? 'Delete list' : 'Leave list'}
-              </DialogTitle>
-              <DialogDescription>
-                {isOwner === undefined
-                  ? 'Please wait...'
-                  : isOwner
-                    ? 'Are you sure? This action cannot be undone.'
-                    : 'Are you sure you want to leave this list?'}
-              </DialogDescription>
-            </DialogHeader>
-            <DialogFooter className="mt-6">
-              <DialogClose asChild>
-                <Button type="button" variant="ghost" size="sm">
-                  Cancel
-                </Button>
-              </DialogClose>
-              <Button
-                type="submit"
-                variant="destructive"
-                size="sm"
-                disabled={isOwner === undefined}
-              >
-                {isOwner === undefined ? 'Loading...' : isOwner ? 'Delete' : 'Leave'}
+          <DialogHeader>
+            <DialogTitle>
+              {isOwner === undefined ?
+                "Loading..."
+              : isOwner ?
+                "Delete list"
+              : "Leave list"}
+            </DialogTitle>
+            <DialogDescription>
+              {isOwner === undefined ?
+                "Please wait..."
+              : isOwner ?
+                "Are you sure? This action cannot be undone."
+              : "Are you sure you want to leave this list?"}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="mt-6">
+            <DialogClose asChild>
+              <Button type="button" variant="ghost" size="sm">
+                Cancel
               </Button>
-            </DialogFooter>
-          </form>
+            </DialogClose>
+            <Button
+              type="button"
+              variant="destructive"
+              size="sm"
+              disabled={isOwner === undefined}
+              onClick={handleDelete}
+            >
+              {isOwner === undefined ?
+                "Loading..."
+              : isOwner ?
+                "Delete"
+              : "Leave"}
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </>
-  )
+  );
 }
