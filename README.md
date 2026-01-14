@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Listan
 
-## Getting Started
+A modern **full‑stack web application** for creating and managing lists with authentication and persistent storage.
 
-First, run the development server:
+🔗 **Live demo:** https://listan.sixten.app
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Screenshot
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+![Listan Screenshot](./screenshot.png)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+> 📸 Add a screenshot named `screenshot.png` to the root of this repository  
+> (Home page or main list view is ideal)
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## Description
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Listan is a full‑stack application that allows users to create, manage, and organize lists in a clean and intuitive interface.  
+Authentication is handled securely, and all data is persisted in a backend database.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+This project was built to practice and demonstrate modern full‑stack JavaScript development using production‑ready tools.
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Tech Stack
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Frontend
+- **Next.js** (App Router)
+- **TypeScript**
+- **React**
+- **Tailwind CSS**
+
+### Backend
+- **Convex** – database and server‑side functions
+- **Clerk** – authentication & user management
+
+### Deployment
+- **Railway** – backend & infrastructure
+- **Custom domain** – `listan.sixten.app`
+
+---
+
+## Features
+
+- User authentication (sign up / sign in) via Clerk
+- Create, read, update, and delete lists
+- Persistent data storage using Convex
+- Server‑side backend functions
+- Responsive and accessible UI
+- Deployed and publicly accessible
+
+---
+
+## Architecture
+
+The application is built using a modern full‑stack architecture:
+
+- The **Next.js frontend** handles routing, UI, and client‑side interactions
+- **Clerk** manages authentication and user sessions
+- **Convex** provides backend functions and database access
+- The application is deployed on **Railway** with a custom domain
