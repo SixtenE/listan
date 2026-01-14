@@ -10,9 +10,6 @@ A modern **full‑stack web application** for creating and managing lists with a
 
 ![Listan Screenshot](./screenshot.png)
 
-> 📸 Add a screenshot named `screenshot.png` to the root of this repository  
-> (Home page or main list view is ideal)
-
 ---
 
 ## Description
