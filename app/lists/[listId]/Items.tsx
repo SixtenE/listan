@@ -1,13 +1,11 @@
 "use client";
 
 import { api } from "@/convex/_generated/api";
-import { Id } from "@/convex/_generated/dataModel";
 import { Preloaded, usePreloadedQuery } from "convex/react";
 import ItemCard from "@/components/ItemCard";
 import { Button } from "@/components/ui/button";
 import { useMutation } from "convex/react";
 import { useState, useEffect } from "react";
-import ItemInput from "./ItemInput";
 import {
   Sortable,
   SortableContent,
@@ -21,7 +19,7 @@ interface ItemsProps {
   listId: string;
 }
 
-export default function Items({ preloadedList, clerkId, listId }: ItemsProps) {
+export default function Items({ preloadedList, clerkId }: ItemsProps) {
   const list = usePreloadedQuery(preloadedList);
   const clearCompletedItems = useMutation(api.items.clearCompletedItems);
   const reorderItems = useMutation(api.items.reorderItems);
