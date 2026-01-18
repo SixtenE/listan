@@ -1,15 +1,15 @@
-'use client'
+"use client";
 
-import { api } from '@/convex/_generated/api'
-import { Preloaded, usePreloadedQuery } from 'convex/react'
-import ListCard from '@/components/ListCard'
-import * as motion from 'motion/react-client'
+import { api } from "@/convex/_generated/api";
+import { Preloaded, usePreloadedQuery } from "convex/react";
+import ListCard from "@/components/ListCard";
+import { motion } from "motion/react";
 
 interface ListsProps {
   /** Preloaded query data for the user's lists */
-  preloadedLists: Preloaded<typeof api.lists.getListsByUser>
+  preloadedLists: Preloaded<typeof api.lists.getListsByUser>;
   /** The Clerk user ID of the current user */
-  clerkId: string
+  clerkId: string;
 }
 
 /**
@@ -18,26 +18,30 @@ interface ListsProps {
  * Shows an empty state when no lists exist.
  */
 export default function Lists({ preloadedLists, clerkId }: ListsProps) {
-  const lists = usePreloadedQuery(preloadedLists)
+  const lists = usePreloadedQuery(preloadedLists);
 
   if (lists.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-24 text-center">
-        <h2 className="mb-4 font-serif text-2xl italic text-foreground/80">No lists yet</h2>
+        <h2 className="mb-4 font-serif text-2xl italic text-foreground/80">
+          No lists yet
+        </h2>
         <p className="text-muted-foreground max-w-sm text-sm">
-          Get started by creating a new list. You can organize your items and share lists with
-          others.
+          Get started by creating a new list. You can organize your items and
+          share lists with others.
         </p>
       </div>
-    )
+    );
   }
 
   return (
     <div className="mt-12">
       <div className="mb-8 flex items-center justify-between">
-        <h2 className="font-serif text-2xl italic text-foreground/80">Your Lists</h2>
+        <h2 className="font-serif text-2xl italic text-foreground/80">
+          Your Lists
+        </h2>
         <span className="text-muted-foreground text-sm">
-          {lists.length} {lists.length === 1 ? 'list' : 'lists'}
+          {lists.length} {lists.length === 1 ? "list" : "lists"}
         </span>
       </div>
       <div className="grid gap-6 md:grid-cols-2">
@@ -58,5 +62,5 @@ export default function Lists({ preloadedLists, clerkId }: ListsProps) {
         ))}
       </div>
     </div>
-  )
+  );
 }
