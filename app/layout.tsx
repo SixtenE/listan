@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { JetBrains_Mono, Inter, Libre_Baskerville } from 'next/font/google'
+import Script from 'next/script'
 import './globals.css'
 import { ClerkProvider } from '@clerk/nextjs'
 import { ThemeProvider } from '@/components/providers/theme-provider'
@@ -36,6 +37,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <Script
+          defer
+          src="https://umami-production-488d.up.railway.app/script.js"
+          data-website-id="a4f6fce1-77ba-4234-a14a-8633bebffd9f"
+        />
+      </head>
       <body
         className={`${inter.variable} ${jetbrainsMono.variable} ${libreBaskerville.variable} font-sans antialiased`}
       >
