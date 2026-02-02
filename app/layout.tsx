@@ -9,31 +9,59 @@ import { Toaster } from '@/components/ui/sonner'
 import { dark } from '@clerk/themes'
 
 const inter = Inter({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-})
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
 
 const jetbrainsMono = JetBrains_Mono({
-  variable: '--font-mono',
-  subsets: ['latin'],
-})
+  variable: "--font-mono",
+  subsets: ["latin"],
+});
 
 const libreBaskerville = Libre_Baskerville({
-  variable: '--font-serif',
-  subsets: ['latin'],
-  weight: ['400', '700'],
-  style: ['normal', 'italic'],
-})
+  variable: "--font-serif",
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  style: ["normal", "italic"],
+});
 
 export const metadata: Metadata = {
-  title: 'listan',
-  description: 'The shopping list that works. Simple. Shared. Done.',
-}
+  metadataBase: new URL("https://listan.sixten.app"),
+  title: {
+    default: "listan | Shared Shopping List App | Simple & Fast",
+    template: "%s | listan",
+  },
+  description: "The shopping list that works. Simple. Shared. Done.",
+  // Note: meta keywords are ignored by Google, but some tools still check it.
+  keywords: [
+    "shared shopping list",
+    "shopping list app",
+    "collaborative shopping list",
+    "grocery list app",
+    "family shopping list",
+    "shopping list for roommates",
+  ],
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    url: "/",
+    title: "listan | Shared Shopping List App | Simple & Fast",
+    description: "The shopping list that works. Simple. Shared. Done.",
+    siteName: "listan",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "listan | Shared Shopping List App | Simple & Fast",
+    description: "The shopping list that works. Simple. Shared. Done.",
+  },
+};
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode
+  children: React.ReactNode;
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
@@ -58,11 +86,11 @@ export default function RootLayout({
             appearance={{
               baseTheme: dark,
               variables: {
-                colorPrimary: '#fafafa',
-                colorBackground: '#0a0a0a',
-                colorInputBackground: '#171717',
-                colorInputText: '#fafafa',
-                borderRadius: '0.375rem',
+                colorPrimary: "#fafafa",
+                colorBackground: "#0a0a0a",
+                colorInputBackground: "#171717",
+                colorInputText: "#fafafa",
+                borderRadius: "0.375rem",
               },
             }}
           >
@@ -74,5 +102,5 @@ export default function RootLayout({
         </ThemeProvider>
       </body>
     </html>
-  )
+  );
 }
