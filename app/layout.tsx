@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { JetBrains_Mono, Inter } from 'next/font/google'
 import Script from 'next/script'
 import './globals.css'
@@ -17,14 +17,19 @@ const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
 });
 
+export const viewport: Viewport = {
+  themeColor: "#ffffff",
+  colorScheme: "light",
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://listan.sixten.app"),
   title: {
-    default: "listan | Shared Shopping List App | Simple & Fast",
-    template: "%s | listan",
+    default: "listan — Shared Shopping List",
+    template: "%s — listan",
   },
   description: "The shopping list that works. Simple. Shared. Done.",
-  // Note: meta keywords are ignored by Google, but some tools still check it.
+  applicationName: "listan",
   keywords: [
     "shared shopping list",
     "shopping list app",
@@ -36,16 +41,21 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/",
   },
+  appleWebApp: {
+    capable: true,
+    title: "listan",
+    statusBarStyle: "default",
+  },
   openGraph: {
     type: "website",
     url: "/",
-    title: "listan | Shared Shopping List App | Simple & Fast",
+    title: "listan — Shared Shopping List",
     description: "The shopping list that works. Simple. Shared. Done.",
     siteName: "listan",
   },
   twitter: {
     card: "summary_large_image",
-    title: "listan | Shared Shopping List App | Simple & Fast",
+    title: "listan — Shared Shopping List",
     description: "The shopping list that works. Simple. Shared. Done.",
   },
 };

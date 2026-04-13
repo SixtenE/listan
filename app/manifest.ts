@@ -2,22 +2,22 @@ import type { MetadataRoute } from 'next'
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Next.js PWA',
-    short_name: 'NextPWA',
-    description: 'A Progressive Web App built with Next.js',
+    name: 'listan — Shared Shopping List',
+    short_name: 'listan',
+    description: 'The shopping list that works. Simple. Shared. Done.',
     start_url: '/',
     display: 'standalone',
     background_color: '#ffffff',
-    theme_color: '#000000',
+    theme_color: '#ffffff',
     icons: [
       {
-        src: '/icon-192x192.png',
-        sizes: '192x192',
-        type: 'image/png',
+        src: '/favicon.ico',
+        sizes: '64x64',
+        type: 'image/x-icon',
       },
       {
-        src: '/icon-512x512.png',
-        sizes: '512x512',
+        src: '/apple-icon.png',
+        sizes: '180x180',
         type: 'image/png',
       },
     ],
