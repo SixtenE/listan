@@ -9,9 +9,6 @@ export default async function Page() {
     redirect('/lists')
   }
 
-  return (
-    <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6">
-      <LandingContent />
-    </main>
-  )
+  return <LandingContent />
+
 }

@@ -1,132 +1,147 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import * as motion from 'motion/react-client'
-import { RefreshCcw, Users, ArrowRight } from 'lucide-react'
+
+const easeOut = [0.23, 1, 0.32, 1] as const
+const rounded =
+  "font-['SF_Pro_Rounded',ui-rounded,-apple-system,system-ui,sans-serif]"
 
 export function LandingContent() {
   return (
-    <div className="relative flex min-h-screen flex-col font-sans">
-      {/* Navbar */}
-      <nav className="flex items-center justify-between px-6 py-6 md:px-12">
-        <Link href="/" className="font-mono text-lg font-medium tracking-tight">
-          listan
+    <div className="relative flex min-h-screen flex-col bg-white text-black">
+      <nav className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-6">
+        <Link href="/" aria-label="listan" className="flex items-center">
+          <Image
+            src="/listan_logo.svg"
+            alt="listan"
+            width={77}
+            height={35}
+            priority
+          />
         </Link>
-        <div className="flex items-center gap-4 text-sm md:gap-6">
+        <div className="flex items-center gap-5">
           <Link
             href="/sign-in"
-            className="text-muted-foreground hover:text-foreground transition-colors"
+            className="text-[15px] text-black transition-opacity duration-150 ease-out hover:opacity-60"
           >
             Sign in
           </Link>
-          <Link href="/lists" className="text-foreground transition-opacity hover:opacity-70">
-            Get started <ArrowRight className="ml-1 inline-block h-3 w-3" />
-          </Link>
+          <PillLink href="/lists" tone="black">
+            Get started
+          </PillLink>
         </div>
       </nav>
 
-      {/* Main Content */}
-      <main className="flex-1 px-6 pt-16 pb-20 md:px-12 md:pt-24">
-        <div className="mx-auto max-w-5xl">
-          {/* Hero Header */}
-          <div className="mb-32 text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-            >
-              <h1 className="mx-auto font-sans text-4xl leading-[1.1] font-medium tracking-tight sm:text-6xl md:text-7xl">
-                a shopping list
-              </h1>
-              <p className="text-muted-foreground mt-4 font-serif text-2xl italic sm:text-4xl">
-                you will actually use
-              </p>
-            </motion.div>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="text-muted-foreground mx-auto mt-8 max-w-lg text-lg leading-relaxed"
-            >
-              I built listan because I needed a shopping list that just works. Simple, shared, and
-              designed to stay out of your way.
-            </motion.p>
-          </div>
+      <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col items-start px-6 pt-20 pb-24 text-left md:pt-28">
+        <motion.h1
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: easeOut }}
+          className={`${rounded} text-[44px] leading-[1.0] font-medium tracking-tight text-black sm:text-6xl md:text-7xl`}
+        >
+          a shopping list
+          <br />
+          you will actually use
+        </motion.h1>
 
-          {/* Sections */}
-          <div className="space-y-24">
-            {/* Features Section */}
-            <section>
-              <motion.h2
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true }}
-                className="text-foreground/80 mb-8 font-serif text-2xl italic"
-              >
-                Features
-              </motion.h2>
-              <div className="grid gap-6 md:grid-cols-2">
-                <FeatureCard
-                  title="Real-time Sync"
-                  subtitle="Connectivity"
-                  icon={<RefreshCcw className="h-5 w-5" />}
-                  description="Updates instantly across all your devices. Add an item on your phone, see it on your desktop."
-                  delay={0.1}
-                />
-                <FeatureCard
-                  title="Shared Lists"
-                  subtitle="Collaboration"
-                  icon={<Users className="h-5 w-5" />}
-                  description="Collaborate with family and friends. Send an invite link and start shopping together."
-                  delay={0.2}
-                />
-              </div>
-            </section>
-          </div>
-        </div>
+        <motion.p
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.06, ease: easeOut }}
+          className="mt-6 max-w-xl text-lg leading-relaxed text-neutral-500"
+        >
+          Simple, shared, and designed to stay out of your way.
+        </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.12, ease: easeOut }}
+          className="mt-10 flex items-center gap-3"
+        >
+          <PillLink href="/lists" tone="black" size="lg">
+            Get started
+          </PillLink>
+          <PillLink href="/sign-in" tone="gray" size="lg">
+            Sign in
+          </PillLink>
+        </motion.div>
+
+        <section className="mt-28 grid w-full gap-4 sm:mt-32 md:grid-cols-2">
+          <FeatureCard
+            index={0}
+            title="Real-time sync"
+            description="Updates instantly across every device. Add an item on your phone, see it on your desktop."
+          />
+          <FeatureCard
+            index={1}
+            title="Shared lists"
+            description="Collaborate with family and friends. Send an invite link and start shopping together."
+          />
+        </section>
       </main>
 
-      {/* Footer */}
-      <footer className="px-6 py-12 text-center md:px-12">
-        <p className="text-muted-foreground font-serif text-sm italic">
-          Designed & built by Sixten
-        </p>
+      <footer className="mx-auto w-full max-w-6xl px-6 py-10 text-center">
+        <p className="text-sm text-neutral-500">Designed &amp; built by Sixten</p>
       </footer>
     </div>
   )
 }
 
-function FeatureCard({
-  title,
-  subtitle,
-  icon,
-  description,
-  delay,
+function PillLink({
+  href,
+  tone,
+  size = 'md',
+  children,
 }: {
+  href: string
+  tone: 'black' | 'gray'
+  size?: 'md' | 'lg'
+  children: React.ReactNode
+}) {
+  const base =
+    'inline-flex items-center justify-center rounded-full text-[15px] font-medium transition-[transform,background-color] duration-150 ease-out active:scale-[0.97] will-change-transform'
+  const tones = {
+    black: 'bg-black text-white hover:bg-neutral-800',
+    gray:
+      'border border-neutral-200 bg-neutral-200 text-neutral-800 hover:bg-neutral-300 hover:border-neutral-300',
+  }
+  const sizes = {
+    md: 'h-10 px-6',
+    lg: 'h-11 px-6',
+  }
+  return (
+    <Link href={href} className={`${base} ${tones[tone]} ${sizes[size]}`}>
+      {children}
+    </Link>
+  )
+}
+
+function FeatureCard({
+  index,
+  title,
+  description,
+}: {
+  index: number
   title: string
-  subtitle: string
-  icon: React.ReactNode
   description: string
-  delay: number
 }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5, delay }}
-      className="group border-border/40 from-card to-secondary hover:border-border flex flex-col rounded-2xl border bg-linear-to-bl p-6 transition-colors sm:p-8"
+      viewport={{ once: true, margin: '-80px' }}
+      transition={{ duration: 0.5, delay: index * 0.06, ease: easeOut }}
+      className="rounded-xl border border-neutral-200 bg-white p-8 text-left"
     >
-      <div className="mb-8 flex items-start justify-between">
-        <div>
-          <h3 className="text-foreground font-medium">{title}</h3>
-          <p className="text-muted-foreground mt-1 text-xs">{subtitle}</p>
-        </div>
-        <div className="bg-secondary text-foreground flex h-10 w-10 items-center justify-center rounded-full transition-transform group-hover:scale-110">
-          {icon}
-        </div>
-      </div>
-      <p className="text-muted-foreground/80 mt-auto text-sm leading-relaxed">{description}</p>
+      <h3
+        className={`${rounded} text-[22px] leading-tight font-medium tracking-tight text-black`}
+      >
+        {title}
+      </h3>
+      <p className="mt-3 text-[15px] leading-relaxed text-neutral-500">{description}</p>
     </motion.div>
   )
 }

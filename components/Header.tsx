@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button'
 import { UserButton } from '@clerk/nextjs'
 import AddListDialog from '@/components/AddListDialog'
 import Link from 'next/link'
+import Image from 'next/image'
 import { ArrowLeft } from 'lucide-react'
 
 interface HeaderProps {
@@ -33,8 +34,15 @@ export default function Header({
             </Link>
           </Button>
         ) : (
-          <Link href="/lists" className="font-mono text-lg font-medium tracking-tight">
-            listan
+          <Link href="/" aria-label="listan">
+            <Image
+              src="/listan_logo.svg"
+              alt="listan"
+              width={110}
+              height={50}
+              priority
+              className="dark:invert"
+            />
           </Link>
         )}
       </div>
