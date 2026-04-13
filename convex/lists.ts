@@ -13,10 +13,37 @@ export const getListsByUser = query({
       .collect()
 
     const lists = await Promise.all(
-      memberships.map(async (membership) => await ctx.db.get(membership.listId)),
+      memberships.map(async (membership) => {
+        const list = await ctx.db.get(membership.listId)
+        if (!list) return null
+
+        const [items, members] = await Promise.all([
+          ctx.db
+            .query('items')
+            .withIndex('by_listId', (q) => q.eq('listId', list._id))
+            .collect(),
+          ctx.db
+            .query('members')
+            .withIndex('by_listId', (q) => q.eq('listId', list._id))
+            .collect(),
+        ])
+
+        const pendingCount = items.filter((item) => !item.completed).length
+        const completedCount = items.length - pendingCount
+
+        return {
+          ...list,
+          itemCount: items.length,
+          pendingCount,
+          completedCount,
+          memberCount: members.length,
+        }
+      }),
     )
 
-    return lists.filter((list) => list !== null).sort((a, b) => b.updatedAt - a.updatedAt)
+    return lists
+      .filter((list): list is NonNullable<typeof list> => list !== null)
+      .sort((a, b) => b.updatedAt - a.updatedAt)
   },
 })
 

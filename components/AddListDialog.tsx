@@ -1,8 +1,10 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -16,14 +18,9 @@ import { Plus } from 'lucide-react'
 import { FormEvent, useState } from 'react'
 
 interface AddListDialogProps {
-  /** The Clerk user ID of the current user */
   clerkId: string
 }
 
-/**
- * A dialog component that allows users to create a new list.
- * Provides a form with a text input for the list name.
- */
 export default function AddListDialog({ clerkId }: AddListDialogProps) {
   const add = useMutation(api.lists.createList)
   const [open, setOpen] = useState(false)
@@ -45,31 +42,35 @@ export default function AddListDialog({ clerkId }: AddListDialogProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="sm" className="font-mono text-xs tracking-wide">
-          <Plus className="mr-1 h-3 w-3" />
-          new list
+        <Button size="sm">
+          <Plus className="size-4" />
+          New list
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-md">
-        <form onSubmit={handleSubmit}>
+      <DialogContent>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
           <DialogHeader>
-            <DialogTitle>Create new list</DialogTitle>
-            <DialogDescription>Enter a name for your new list.</DialogDescription>
+            <DialogTitle>Create a new list</DialogTitle>
+            <DialogDescription>
+              Give it a name — you can share it with anyone later.
+            </DialogDescription>
           </DialogHeader>
-          <div className="mt-6">
-            <input
-              id="name"
-              name="name"
-              value={listName}
-              onChange={(e) => setListName(e.target.value)}
-              placeholder="List name..."
-              className="w-full rounded-lg border border-border/40 bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus:border-border focus:outline-none"
-              autoFocus
-            />
-          </div>
-          <DialogFooter className="mt-6">
-            <Button type="submit" size="sm" disabled={!listName.trim()}>
-              Create
+          <Input
+            id="name"
+            name="name"
+            value={listName}
+            onChange={(e) => setListName(e.target.value)}
+            placeholder="e.g. Weekend groceries"
+            autoFocus
+          />
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button type="button" variant="ghost">
+                Cancel
+              </Button>
+            </DialogClose>
+            <Button type="submit" disabled={!listName.trim()}>
+              Create list
             </Button>
           </DialogFooter>
         </form>

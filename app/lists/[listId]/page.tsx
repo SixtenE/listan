@@ -32,7 +32,7 @@ export default async function Page({
   }
 
   return (
-    <div className="flex min-h-screen flex-col font-sans">
+    <div className="flex min-h-screen flex-col bg-background font-sans">
       <main className="mx-auto w-full max-w-5xl px-6 md:px-12">
         <Header
           clerkId={userId}
@@ -40,14 +40,15 @@ export default async function Page({
           backHref="/lists"
           showAddListButton={false}
         />
-        <div className="pb-20 mt-8">
+        <div className="mt-8 pb-36">
           <Items preloadedList={data} clerkId={userId} listId={listId} />
-          {/* Item input */}
-          <div className="fixed flex justify-center bottom-0 pb-8 px-2 left-0 right-0">
-            <ItemInput clerkId={userId} listId={listId} />
-          </div>
         </div>
       </main>
+      <div className="pointer-events-none fixed inset-x-0 bottom-0 z-20 flex justify-center px-4 pb-6 sm:pb-8">
+        <div className="pointer-events-auto w-full max-w-[36rem]">
+          <ItemInput clerkId={userId} listId={listId} />
+        </div>
+      </div>
     </div>
   );
 }

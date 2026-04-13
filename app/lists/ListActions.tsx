@@ -13,6 +13,7 @@ import {
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Dialog,
   DialogClose,
@@ -135,51 +136,56 @@ export default function ListActions({ listId, clerkId }: ListActionsProps) {
     <>
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
-          <Button className="h-6 w-6" size="icon-sm" variant="ghost">
-            <MoreVertical className="h-3 w-3" />
+          <Button
+            className="text-muted-foreground hover:text-foreground"
+            size="icon-sm"
+            variant="ghost"
+            aria-label="List actions"
+          >
+            <MoreVertical className="size-4" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="border-border w-32 border" align="end">
+        <DropdownMenuContent className="min-w-[10rem]" align="end">
           {isOwner === undefined ?
             <DropdownMenuGroup>
-              <DropdownMenuItem disabled className="font-mono text-xs">
+              <DropdownMenuItem disabled className="text-[14px]">
                 Loading...
               </DropdownMenuItem>
             </DropdownMenuGroup>
           : <>
               <DropdownMenuGroup>
                 <DropdownMenuItem
-                  className="font-mono text-xs"
+                  className="text-[14px]"
                   onSelect={() => setShowShareDialog(true)}
                 >
-                  invite
-                  <Link2 className="ml-auto h-3 w-3" />
+                  Invite
+                  <Link2 className="ml-auto size-4" />
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               {isOwner ?
                 <DropdownMenuGroup>
                   <DropdownMenuItem
-                    className="font-mono text-xs"
+                    className="text-[14px]"
                     onSelect={handleOpenEditDialog}
                   >
-                    edit
-                    <Edit className="ml-auto h-3 w-3" />
+                    Edit
+                    <Edit className="ml-auto size-4" />
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onSelect={() => setShowDeleteDialog(true)}
-                    className="text-destructive font-mono text-xs"
+                    className="text-[14px]"
                   >
-                    delete
-                    <Trash className="stroke-destructive ml-auto h-3 w-3" />
+                    Delete
+                    <Trash className="ml-auto size-4" />
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
               : <DropdownMenuGroup>
                   <DropdownMenuItem
                     onSelect={() => setShowDeleteDialog(true)}
-                    className="text-destructive font-mono text-xs"
+                    className="text-[14px]"
                   >
-                    leave
-                    <LogOut className="stroke-destructive ml-auto h-3 w-3" />
+                    Leave
+                    <LogOut className="ml-auto size-4" />
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
               }
@@ -197,30 +203,32 @@ export default function ListActions({ listId, clerkId }: ListActionsProps) {
               Share this link to invite others to your list.
             </DialogDescription>
           </DialogHeader>
-          <div className="mt-4 overflow-hidden">
-            <div className="flex items-center gap-2 rounded-lg border border-border/40 bg-muted/30 p-2">
-              <code className="text-muted-foreground block w-0 flex-1 overflow-hidden text-ellipsis whitespace-nowrap px-2 font-mono text-xs">
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center gap-1.5 rounded-full border border-border bg-background py-1.5 pr-1.5 pl-5">
+              <code className="text-muted-foreground block w-0 flex-1 truncate font-mono text-[13px]">
                 {getShareLink()}
               </code>
               <Button
                 type="button"
                 size="sm"
-                variant="ghost"
-                className="shrink-0 h-8"
+                variant="secondary"
+                className="shrink-0"
                 onClick={handleCopyLink}
               >
-                {copied ?
+                {copied ? (
                   <>
-                    <Check className="mr-1 h-3 w-3" />
+                    <Check className="size-4" />
                     Copied
                   </>
-                : "Copy"}
+                ) : (
+                  "Copy"
+                )}
               </Button>
             </div>
             {typeof navigator !== "undefined" && navigator.share && (
               <Button
                 type="button"
-                className="mt-3 w-full"
+                className="w-full"
                 onClick={async () => {
                   try {
                     await navigator.share({
@@ -229,12 +237,11 @@ export default function ListActions({ listId, clerkId }: ListActionsProps) {
                       url: getShareLink(),
                     });
                   } catch (err) {
-                    // User cancelled or share failed
                     console.log("Share cancelled or failed:", err);
                   }
                 }}
               >
-                <Share className="mr-2 h-3 w-3" />
+                <Share className="size-4" />
                 Share
               </Button>
             )}
@@ -249,22 +256,19 @@ export default function ListActions({ listId, clerkId }: ListActionsProps) {
             <DialogTitle>Edit list</DialogTitle>
             <DialogDescription>Update the name of this list.</DialogDescription>
           </DialogHeader>
-          <div className="mt-6">
-            <input
-              value={listName}
-              onChange={(e) => setListName(e.target.value)}
-              placeholder="List name..."
-              className="w-full rounded-lg border border-border/40 bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus:border-border focus:outline-none"
-              autoFocus
-            />
-          </div>
-          <DialogFooter className="mt-6">
+          <Input
+            value={listName}
+            onChange={(e) => setListName(e.target.value)}
+            placeholder="List name"
+            autoFocus
+          />
+          <DialogFooter>
             <DialogClose asChild>
-              <Button type="button" variant="ghost" size="sm">
+              <Button type="button" variant="ghost">
                 Cancel
               </Button>
             </DialogClose>
-            <Button type="button" size="sm" onClick={handleEdit}>
+            <Button type="button" onClick={handleEdit}>
               Save
             </Button>
           </DialogFooter>
@@ -290,16 +294,14 @@ export default function ListActions({ listId, clerkId }: ListActionsProps) {
               : "Are you sure you want to leave this list?"}
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter className="mt-6">
+          <DialogFooter>
             <DialogClose asChild>
-              <Button type="button" variant="ghost" size="sm">
+              <Button type="button" variant="ghost">
                 Cancel
               </Button>
             </DialogClose>
             <Button
               type="button"
-              variant="destructive"
-              size="sm"
               disabled={isOwner === undefined}
               onClick={handleDelete}
             >

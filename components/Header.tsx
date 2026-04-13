@@ -1,7 +1,7 @@
-import { Button } from '@/components/ui/button'
 import { UserButton } from '@clerk/nextjs'
 import AddListDialog from '@/components/AddListDialog'
 import Link from 'next/link'
+import Image from 'next/image'
 import { ArrowLeft } from 'lucide-react'
 
 interface HeaderProps {
@@ -19,32 +19,34 @@ export default function Header({
 }: HeaderProps) {
   return (
     <header className="flex w-full items-center justify-between py-6">
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3">
         {showBackButton ? (
-          <Button
-            asChild
-            variant="ghost"
-            size="sm"
-            className="text-muted-foreground hover:text-foreground -ml-3"
+          <Link
+            href={backHref}
+            className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1.5 text-[15px] transition-opacity duration-150 ease-out hover:opacity-80"
           >
-            <Link href={backHref}>
-              <ArrowLeft className="mr-1 h-4 w-4" />
-              Back
-            </Link>
-          </Button>
+            <ArrowLeft className="size-4" />
+            Back
+          </Link>
         ) : (
-          <Link href="/lists" className="font-mono text-lg font-medium tracking-tight">
-            listan
+          <Link href="/" aria-label="listan" className="inline-flex items-center">
+            <Image
+              src="/listan_logo.svg"
+              alt="listan"
+              width={88}
+              height={40}
+              priority
+            />
           </Link>
         )}
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3">
         {showAddListButton && <AddListDialog clerkId={clerkId} />}
         <UserButton
           appearance={{
             elements: {
-              avatarBox: 'h-8 w-8',
+              avatarBox: 'size-9',
             },
           }}
         />
