@@ -1,12 +1,11 @@
 import type { Metadata } from 'next'
-import { JetBrains_Mono, Inter, Libre_Baskerville } from 'next/font/google'
+import { JetBrains_Mono, Inter } from 'next/font/google'
 import Script from 'next/script'
 import './globals.css'
 import { ClerkProvider } from '@clerk/nextjs'
 import { ThemeProvider } from '@/components/providers/theme-provider'
 import { ConvexClientProvider } from '@/components/providers/convex-provider'
 import { Toaster } from '@/components/ui/sonner'
-import { dark } from '@clerk/themes'
 
 const inter = Inter({
   variable: "--font-geist-sans",
@@ -16,13 +15,6 @@ const inter = Inter({
 const jetbrainsMono = JetBrains_Mono({
   variable: "--font-mono",
   subsets: ["latin"],
-});
-
-const libreBaskerville = Libre_Baskerville({
-  variable: "--font-serif",
-  subsets: ["latin"],
-  weight: ["400", "700"],
-  style: ["normal", "italic"],
 });
 
 export const metadata: Metadata = {
@@ -73,27 +65,16 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${inter.variable} ${jetbrainsMono.variable} ${libreBaskerville.variable} font-sans antialiased`}
+        className={`${inter.variable} ${jetbrainsMono.variable} font-sans antialiased`}
       >
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
-          enableSystem
+          defaultTheme="light"
+          enableSystem={false}
+          forcedTheme="light"
           disableTransitionOnChange
         >
-          <ClerkProvider
-            dynamic
-            appearance={{
-              baseTheme: dark,
-              variables: {
-                colorPrimary: "#fafafa",
-                colorBackground: "#0a0a0a",
-                colorInputBackground: "#171717",
-                colorInputText: "#fafafa",
-                borderRadius: "0.375rem",
-              },
-            }}
-          >
+          <ClerkProvider dynamic>
             <ConvexClientProvider>
               {children}
               <Toaster />

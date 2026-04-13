@@ -24,8 +24,6 @@ const ItemCard = forwardRef<HTMLLIElement, ItemCardProps>(function ItemCard(
   const [optimisticCompleted, setOptimisticCompleted] = useState(completed);
   const isPendingRef = useRef(false);
 
-  // Sync optimistic state with prop when it changes from server
-  // Only sync if we're not currently in a pending optimistic update
   useEffect(() => {
     if (!isPendingRef.current) {
       setOptimisticCompleted(completed);
@@ -33,12 +31,10 @@ const ItemCard = forwardRef<HTMLLIElement, ItemCardProps>(function ItemCard(
   }, [completed]);
 
   const handleToggle = async (e: React.MouseEvent) => {
-    // Prevent drag from starting when clicking the checkbox
     e.stopPropagation();
 
     const newCompleted = !optimisticCompleted;
 
-    // Optimistic update - update UI immediately
     isPendingRef.current = true;
     setOptimisticCompleted(newCompleted);
 
@@ -49,11 +45,9 @@ const ItemCard = forwardRef<HTMLLIElement, ItemCardProps>(function ItemCard(
         clerkId,
       });
     } catch (error) {
-      // Revert on error
       setOptimisticCompleted(!newCompleted);
       console.error("Failed to toggle item:", error);
     } finally {
-      // Reset pending flag after a short delay to allow server update to sync
       setTimeout(() => {
         isPendingRef.current = false;
       }, 100);
@@ -66,9 +60,8 @@ const ItemCard = forwardRef<HTMLLIElement, ItemCardProps>(function ItemCard(
     <li
       ref={ref}
       className={cn(
-        "group relative flex w-full items-start gap-4 rounded-xl border border-border/40 bg-card p-4 transition-all hover:border-border",
-        displayCompleted &&
-          "bg-secondary/30 border-transparent hover:border-border/40",
+        "group relative flex w-full items-center gap-4 rounded-xl border border-border bg-background px-5 py-4 transition-colors duration-150 ease-out hover:border-foreground/30",
+        displayCompleted && "bg-muted border-transparent hover:border-border",
         className
       )}
       {...props}
@@ -80,24 +73,24 @@ const ItemCard = forwardRef<HTMLLIElement, ItemCardProps>(function ItemCard(
         onMouseDown={(e) => e.stopPropagation()}
         onTouchStart={(e) => e.stopPropagation()}
         className={cn(
-          "relative z-10 mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border transition-all touch-none",
-          displayCompleted ?
-            "border-foreground bg-foreground text-background"
-          : "border-muted-foreground/30 hover:border-foreground"
+          "relative z-10 flex size-5 shrink-0 items-center justify-center rounded-full border transition-[background-color,border-color,transform] duration-150 ease-out touch-none active:scale-[0.92]",
+          displayCompleted
+            ? "border-foreground bg-foreground text-background"
+            : "border-border hover:border-foreground"
         )}
         aria-label={
           displayCompleted ? "Mark as incomplete" : "Mark as complete"
         }
       >
-        {displayCompleted && <Check className="h-3 w-3" />}
+        {displayCompleted && <Check className="size-3" strokeWidth={3} />}
       </button>
       <div className="flex-1 min-w-0">
         <p
           className={cn(
-            "text-sm leading-relaxed transition-opacity break-words",
-            displayCompleted ?
-              "text-muted-foreground line-through opacity-60"
-            : "text-foreground"
+            "text-[15px] leading-snug break-words transition-opacity duration-150 ease-out",
+            displayCompleted
+              ? "text-muted-foreground line-through opacity-60"
+              : "text-foreground"
           )}
         >
           {content}

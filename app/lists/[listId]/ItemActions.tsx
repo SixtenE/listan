@@ -32,7 +32,6 @@ interface ItemActionsProps {
 }
 
 export default function ItemActions({ itemId, listId, clerkId, initialContent }: ItemActionsProps) {
-  // listId is kept for future use (e.g., for permission checks)
   void listId
 
   const [showEditDialog, setShowEditDialog] = useState(false)
@@ -81,56 +80,57 @@ export default function ItemActions({ itemId, listId, clerkId, initialContent }:
     <>
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
-          <Button className="h-6 w-6" size="icon-sm" variant="ghost">
-            <MoreVertical className="h-3 w-3" />
+          <Button
+            className="text-muted-foreground hover:text-foreground"
+            size="icon-sm"
+            variant="ghost"
+            aria-label="Item actions"
+          >
+            <MoreVertical className="size-4" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="border-border w-32 border" align="end">
+        <DropdownMenuContent className="min-w-[10rem]" align="end">
           <DropdownMenuGroup>
             <DropdownMenuItem
-              className="font-mono text-xs"
+              className="text-[14px]"
               onSelect={() => setShowEditDialog(true)}
             >
-              edit
-              <Edit className="ml-auto h-3 w-3" />
+              Edit
+              <Edit className="ml-auto size-4" />
             </DropdownMenuItem>
             <DropdownMenuItem
               onSelect={handleDelete}
-              className="text-destructive font-mono text-xs"
+              className="text-[14px]"
             >
-              delete
-              <Trash className="stroke-destructive ml-auto h-3 w-3" />
+              Delete
+              <Trash className="ml-auto size-4" />
             </DropdownMenuItem>
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
       <Dialog open={showEditDialog} onOpenChange={setShowEditDialog}>
         <DialogContent>
-          <form onSubmit={handleEditSubmit}>
+          <form onSubmit={handleEditSubmit} className="flex flex-col gap-6">
             <DialogHeader>
               <DialogTitle>Edit item</DialogTitle>
               <DialogDescription>Update the content of this item.</DialogDescription>
             </DialogHeader>
-            <div className="mt-6">
-              <textarea
-                name="content"
-                value={itemContent}
-                onChange={(e) => setItemContent(e.target.value)}
-                placeholder="Item content..."
-                rows={3}
-                className="w-full resize-none rounded-lg border border-border/40 bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus:border-border focus:outline-none"
-                autoFocus
-              />
-            </div>
-            <DialogFooter className="mt-6">
+            <textarea
+              name="content"
+              value={itemContent}
+              onChange={(e) => setItemContent(e.target.value)}
+              placeholder="Item content"
+              rows={3}
+              className="placeholder:text-muted-foreground border-border focus-visible:border-foreground/40 w-full resize-none rounded-xl border bg-background px-4 py-3 text-[15px] outline-none transition-colors duration-150 ease-out"
+              autoFocus
+            />
+            <DialogFooter>
               <DialogClose asChild>
-                <Button type="button" variant="ghost" size="sm">
+                <Button type="button" variant="ghost">
                   Cancel
                 </Button>
               </DialogClose>
-              <Button type="submit" size="sm">
-                Save
-              </Button>
+              <Button type="submit">Save</Button>
             </DialogFooter>
           </form>
         </DialogContent>

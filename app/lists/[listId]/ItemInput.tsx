@@ -41,7 +41,7 @@ export default function ItemInput({ clerkId, listId }: ItemInputProps) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="group w-full sm:w-xl flex items-center gap-3 rounded-2xl border border-border/40 bg-card p-4 transition-colors hover:border-border focus-within:border-border"
+      className="group flex w-full items-center gap-2 rounded-full border border-border bg-background py-1.5 pr-1.5 pl-5 transition-colors duration-150 ease-out focus-within:border-foreground/30 sm:w-[36rem]"
     >
       <input
         type="text"
@@ -49,7 +49,7 @@ export default function ItemInput({ clerkId, listId }: ItemInputProps) {
         value={content}
         onChange={(e) => setContent(e.target.value)}
         placeholder="Add an item..."
-        className="bg-transparent placeholder:text-muted-foreground flex-1 text-base md:text-sm outline-none"
+        className="placeholder:text-muted-foreground flex-1 bg-transparent text-[16px] outline-none sm:text-[15px]"
         onKeyDown={(e) => {
           if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
@@ -60,8 +60,8 @@ export default function ItemInput({ clerkId, listId }: ItemInputProps) {
       <Button
         type="submit"
         size="icon-sm"
-        className="rounded-xl"
         disabled={!content.trim() || isSubmitting}
+        aria-label="Add item"
       >
         <Plus />
       </Button>

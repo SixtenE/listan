@@ -81,11 +81,11 @@ export default function Items({ preloadedList, clerkId }: ItemsProps) {
 
   if (items.length === 0) {
     return (
-      <div className="flex flex-col max-w-2xl mx-auto">
-        <h2 className="font-serif text-3xl italic text-foreground/80">
+      <div className="mx-auto flex max-w-2xl flex-col">
+        <h1 className="font-display text-[40px] leading-[1.0] font-medium tracking-tight text-foreground sm:text-5xl">
           {list.name}
-        </h2>
-        <p className="text-muted-foreground mt-2 text-sm">
+        </h1>
+        <p className="text-muted-foreground mt-5 text-[15px]">
           Add your first item to get started.
         </p>
       </div>
@@ -93,16 +93,15 @@ export default function Items({ preloadedList, clerkId }: ItemsProps) {
   }
 
   return (
-    <div className="flex flex-col gap-8 max-w-2xl mx-auto">
-      {/* List header */}
-      <div className="flex items-start justify-between">
-        <div>
-          <h1 className="font-serif text-3xl italic text-foreground/80">
+    <div className="mx-auto flex max-w-2xl flex-col gap-10">
+      <div className="flex items-end justify-between gap-4">
+        <div className="min-w-0">
+          <h1 className="font-display truncate text-[40px] leading-[1.0] font-medium tracking-tight text-foreground sm:text-5xl">
             {list.name}
           </h1>
-          <div className="text-muted-foreground mt-2 flex items-center gap-4 text-sm">
+          <div className="text-muted-foreground mt-4 flex items-center gap-3 text-[14px]">
             <span>{pendingCount} pending</span>
-            <span className="text-muted-foreground/30">•</span>
+            <span className="text-border">•</span>
             <span>{completedCount} completed</span>
           </div>
         </div>
@@ -111,9 +110,8 @@ export default function Items({ preloadedList, clerkId }: ItemsProps) {
           disabled={isClearing || completedCount === 0}
           variant="ghost"
           size="sm"
-          className="text-muted-foreground hover:text-foreground text-xs"
         >
-          clear completed
+          Clear completed
         </Button>
       </div>
 
@@ -125,7 +123,7 @@ export default function Items({ preloadedList, clerkId }: ItemsProps) {
         orientation="vertical"
       >
         <SortableContent asChild>
-          <ul className="flex flex-col gap-3">
+          <ul className="flex flex-col gap-2">
             {items.map((item) => (
               <SortableItem key={item._id} value={item._id} asHandle asChild>
                 <ItemCard
@@ -150,7 +148,7 @@ export default function Items({ preloadedList, clerkId }: ItemsProps) {
                 completed={item.completed}
                 listId={listIdValue}
                 clerkId={clerkId}
-                className="shadow-lg"
+                className="border-foreground/30"
               />
             );
           }}

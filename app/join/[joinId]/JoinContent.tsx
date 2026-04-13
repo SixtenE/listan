@@ -9,6 +9,9 @@ import { useState } from 'react'
 import * as motion from 'motion/react-client'
 import { Check, X, Loader2 } from 'lucide-react'
 import Link from 'next/link'
+import Image from 'next/image'
+
+const easeOut = [0.23, 1, 0.32, 1] as const
 
 interface JoinContentProps {
   listId: string
@@ -37,14 +40,12 @@ export default function JoinContent({ listId, clerkId }: JoinContentProps) {
         clerkId,
       })
       setSuccess(true)
-      // Redirect to the list after a short delay
       setTimeout(() => {
         router.push(`/lists/${listId}`)
-      }, 1500)
+      }, 1200)
     } catch (err) {
       if (err instanceof Error) {
         if (err.message.includes('already a member')) {
-          // User is already a member, redirect to the list
           router.push(`/lists/${listId}`)
           return
         }
@@ -57,126 +58,125 @@ export default function JoinContent({ listId, clerkId }: JoinContentProps) {
     }
   }
 
-  // List not found
   if (list === null) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center px-6">
+      <Shell>
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="text-center"
+          transition={{ duration: 0.4, ease: easeOut }}
+          className="flex flex-col items-start"
         >
-          <div className="border-border mx-auto mb-6 flex h-12 w-12 items-center justify-center border">
-            <X className="text-muted-foreground h-6 w-6" />
+          <div className="border-border mb-6 flex size-12 items-center justify-center rounded-full border">
+            <X className="text-muted-foreground size-5" />
           </div>
-          <h1 className="text-2xl font-medium tracking-tight">List not found</h1>
-          <p className="text-muted-foreground mt-2 font-mono text-sm">
+          <h1 className="font-display text-[40px] leading-[1.0] font-medium tracking-tight sm:text-5xl">
+            List not found
+          </h1>
+          <p className="text-muted-foreground mt-5 max-w-md text-[15px] leading-relaxed">
             This invite link is invalid or the list has been deleted.
           </p>
-          <Button asChild className="mt-6 font-mono text-xs" size="sm">
-            <Link href="/lists">go to your lists</Link>
+          <Button asChild className="mt-8">
+            <Link href="/lists">Go to your lists</Link>
           </Button>
         </motion.div>
-      </div>
+      </Shell>
     )
   }
 
-  // Loading state
   if (list === undefined) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center px-6">
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center">
-          <Loader2 className="text-muted-foreground mx-auto h-6 w-6 animate-spin" />
-          <p className="text-muted-foreground mt-4 font-mono text-xs">Loading...</p>
+      <Shell>
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+          <Loader2 className="text-muted-foreground size-5 animate-spin" />
         </motion.div>
-      </div>
+      </Shell>
     )
   }
 
-  // Success state
   if (success) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center px-6">
+      <Shell>
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.3 }}
-          className="text-center"
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, ease: easeOut }}
+          className="flex flex-col items-start"
         >
-          <div className="bg-foreground text-background mx-auto mb-6 flex h-12 w-12 items-center justify-center">
-            <Check className="h-6 w-6" />
+          <div className="bg-foreground text-background mb-6 flex size-12 items-center justify-center rounded-full">
+            <Check className="size-5" strokeWidth={3} />
           </div>
-          <h1 className="text-2xl font-medium tracking-tight">Joined!</h1>
-          <p className="text-muted-foreground mt-2 font-mono text-sm">
-            Redirecting to {list?.name}...
+          <h1 className="font-display text-[40px] leading-[1.0] font-medium tracking-tight sm:text-5xl">
+            Joined
+          </h1>
+          <p className="text-muted-foreground mt-5 text-[15px]">
+            Redirecting to {list?.name}…
           </p>
         </motion.div>
-      </div>
+      </Shell>
     )
   }
 
   return (
-    <div className="flex min-h-screen flex-col">
-      {/* Subtle grid background */}
-      <div className="pointer-events-none fixed inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-size-[64px_64px]" />
+    <Shell>
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: easeOut }}
+        className="flex max-w-xl flex-col items-start"
+      >
+        <span className="text-muted-foreground text-[13px] tracking-wide uppercase">
+          You’ve been invited
+        </span>
 
-      {/* Header */}
-      <header className="relative z-10 flex items-center justify-between px-6 py-6 md:px-12">
-        <Link
-          href="/lists"
-          className="font-mono text-sm tracking-wider transition-opacity hover:opacity-70"
-        >
-          listan
+        <h1 className="font-display mt-4 text-[44px] leading-[1.0] font-medium tracking-tight sm:text-6xl">
+          Join “{list.name}”
+        </h1>
+
+        <p className="text-muted-foreground mt-6 max-w-md text-lg leading-relaxed">
+          Accept this invitation to collaborate on this shopping list.
+        </p>
+
+        {error && (
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-foreground mt-4 text-[14px]"
+          >
+            {error}
+          </motion.p>
+        )}
+
+        <div className="mt-10 flex flex-wrap items-center gap-3">
+          <Button onClick={handleJoin} disabled={isJoining} size="lg">
+            {isJoining ? (
+              <>
+                <Loader2 className="size-4 animate-spin" />
+                Joining…
+              </>
+            ) : (
+              'Join list'
+            )}
+          </Button>
+          <Button asChild variant="ghost" size="lg">
+            <Link href="/lists">Cancel</Link>
+          </Button>
+        </div>
+      </motion.div>
+    </Shell>
+  )
+}
+
+function Shell({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="bg-background flex min-h-screen flex-col">
+      <header className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-6 md:px-12">
+        <Link href="/lists" aria-label="listan">
+          <Image src="/listan_logo.svg" alt="listan" width={88} height={40} priority />
         </Link>
       </header>
-
-      {/* Main content */}
-      <main className="relative z-10 flex flex-1 flex-col items-center justify-center px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="max-w-md text-center"
-        >
-          <span className="text-muted-foreground font-mono text-xs tracking-widest uppercase">
-            You&apos;ve been invited
-          </span>
-
-          <h1 className="mt-4 text-3xl font-medium tracking-tight">
-            Join &ldquo;{list.name}&rdquo;
-          </h1>
-
-          <p className="text-muted-foreground mt-4 font-mono text-sm">
-            Accept this invitation to collaborate on this shopping list.
-          </p>
-
-          {error && (
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="mt-4 font-mono text-sm text-destructive"
-            >
-              {error}
-            </motion.p>
-          )}
-
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
-            <Button onClick={handleJoin} disabled={isJoining} className="font-mono text-sm">
-              {isJoining ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  joining...
-                </>
-              ) : (
-                'join list'
-              )}
-            </Button>
-            <Button asChild variant="ghost" className="font-mono text-sm">
-              <Link href="/lists">cancel</Link>
-            </Button>
-          </div>
-        </motion.div>
+      <main className="mx-auto flex w-full max-w-5xl flex-1 items-start px-6 pt-16 pb-24 md:px-12 md:pt-24">
+        {children}
       </main>
     </div>
   )

@@ -22,10 +22,10 @@ export default async function Page() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col font-sans">
+    <div className="flex min-h-screen flex-col bg-background font-sans">
       <main className="mx-auto w-full max-w-5xl px-6 md:px-12">
-        <Header clerkId={userId} />
-        <div className="pb-20">
+        <Header clerkId={userId} showAddListButton={false} />
+        <div className="pb-24">
           <Lists preloadedLists={data} clerkId={userId} />
         </div>
       </main>
